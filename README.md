@@ -28,10 +28,13 @@ Karnataka. Please use it responsibly.
 ## Getting started
 
 **Run it.**
-1. Install Python 3. Nothing else is needed, because the watcher uses only the standard
+1. Get the files. Download the repository with **Code**, then **Download ZIP**, and unzip
+   it, or clone it with git. If you only want the program, download `watcher.py` and
+   `index.html` and keep them together in one folder.
+2. Install Python 3. Nothing else is needed, because the watcher uses only the standard
    library.
-2. In this folder, run `python3 watcher.py`.
-3. Open <http://localhost:8765> in a browser.
+3. In that folder, run `python3 watcher.py`.
+4. Open <http://localhost:8765> in a browser.
 
 If the first read fails on a Mac with a certificate error, run "Install Certificates.command"
 from your Python folder in Applications, then start the watcher again.
