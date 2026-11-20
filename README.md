@@ -3,6 +3,7 @@
 ![Status](https://img.shields.io/badge/Status-Personal%20use-1f6f78)
 ![Python](https://img.shields.io/badge/Python-3%2C%20standard%20library%20only-3776ab)
 ![License](https://img.shields.io/badge/License-MIT-green)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24391244.svg)](https://doi.org/10.5281/zenodo.24391244)
 
 **A personal display board watcher for the High Court of Karnataka: follow your cases
 against the court's live board and see how many cases away each one is.**
@@ -237,12 +238,6 @@ court_watcher/
 
 The watcher listens on this computer only (`127.0.0.1`, port 8765 by default). Use
 `--port` to choose another port.
-
----
-
-## Author
-
-Aditya Rajiv Ratnam
 
 ---
 
