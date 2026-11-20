@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>High Court of Karnataka Display Board Watcher</title>
+<style>
+:root{
+  --paper:#f4f6f2;--sheet:#fff;--ink:#1c2540;--soft:#5b6479;--rule:#d4d9d2;--wash:#eceee9;
+  --brick:#a12b2b;--brickwash:#f6e6e3;--amber:#b36b00;--amberwash:#f8efdc;--green:#2e6b4f;--greenwash:#e4efe8;--blue:#274c9c;
+  --serif:"Iowan Old Style","Charter","Palatino Linotype",Georgia,serif;
+  --cond:"Avenir Next Condensed","DIN Condensed","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#15191a;--sheet:#1d2224;--ink:#e6e9e3;--soft:#9ba39b;--rule:#353d3b;--wash:#262c2b;--brick:#e8806d;--brickwash:#3b2420;--amber:#e3ac52;--amberwash:#352b18;--green:#74c096;--greenwash:#1a3226;--blue:#a2b6e6}}
+[data-theme=dark]{--paper:#15191a;--sheet:#1d2224;--ink:#e6e9e3;--soft:#9ba39b;--rule:#353d3b;--wash:#262c2b;--brick:#e8806d;--brickwash:#3b2420;--amber:#e3ac52;--amberwash:#352b18;--green:#74c096;--greenwash:#1a3226;--blue:#a2b6e6}
+*{box-sizing:border-box}
+body{margin:0;font:19px/1.55 var(--serif);background:var(--paper);color:var(--ink)}
+main{max-width:1320px;margin:0 auto;padding:28px clamp(20px,4vw,56px) 90px}
+button,input,select{font:inherit;color:var(--ink)}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+a{color:var(--blue)}
+svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.btn{padding:9px 18px;border-radius:4px;border:1.5px solid var(--ink);background:none;font-weight:600}
+.btn.fill{background:var(--ink);color:var(--paper)}
+.btn.sm{padding:4px 12px;font-size:16px}
+.btn.vc{border-color:var(--green);color:var(--green);display:inline-flex;gap:7px;align-items:center}
+.ico{background:none;border:0;padding:7px;border-radius:50%;color:var(--soft);display:inline-flex}.ico:hover{background:var(--wash);color:var(--ink)}
+
+.mast{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:34px}.brand{font:700 clamp(21px,3vw,28px)/1.2 var(--serif)}.topbar .tools{display:flex;gap:10px}
+.ico.big{border:1.5px solid var(--rule);padding:10px}.cta{display:flex;gap:14px;align-items:center}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;box-shadow:0 10px 30px rgba(10,15,30,.35);z-index:50}
+.toast button{background:none;border:0;color:inherit;font-weight:700;text-decoration:underline;margin-left:10px}
+#dlgS{width:min(680px,94vw)}
+#dlgM{width:min(620px,94vw)}
+#dlgD{width:min(700px,94vw)}
+.dr{display:grid;grid-template-columns:28px 1fr 84px 96px;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
+.dr.dh{border-top:0;padding:4px 0;color:var(--soft);font-size:15px}
+.dr .who b{display:block}.dr .who small{color:var(--soft)}.dr.off .who,.dr.off input[type=number]{opacity:.45}
+@media(max-width:520px){.dr{grid-template-columns:28px 1fr 64px 72px;gap:8px}}
+::placeholder{font-size:16px}
+h1{font:600 clamp(30px,5.2vw,50px)/1.08 var(--serif);letter-spacing:-.015em;margin:0}
+h1 .u{color:var(--brick)}h1 .w{color:var(--amber)}
+.sum{margin-top:16px;color:var(--soft);font-size:19px}.sum .hot{color:var(--brick);font-weight:700}.sum .warm{color:var(--amber);font-weight:700}
+.status{margin-top:8px;font-size:15px;color:var(--soft)}.status .e{color:var(--brick)}
+
+.grp{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;margin-bottom:28px;overflow:hidden}
+.gh{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;padding:22px 28px 14px}
+.gh .hall{font:700 30px/1 var(--cond);letter-spacing:.01em}.gh .hall small{font:400 17px var(--serif);color:var(--soft);margin-left:8px;letter-spacing:0}
+.gh .court{color:var(--soft);font-size:16px;text-align:right}.gh .court b{font:700 22px var(--cond);color:var(--ink);margin-right:6px}
+.ruler{position:relative;height:104px;margin:0 44px 2px}
+.ruler.tall{height:140px}
+.track{position:absolute;left:0;right:0;bottom:36px;height:3px;background:var(--rule);border-radius:2px}
+.seg{position:absolute;bottom:36px;height:3px;border-radius:2px}
+.seg.passed{background:var(--amber)}.seg.now{background:var(--brick)}.seg.close{background:var(--amber)}.seg.far{background:var(--green)}
+.tk{position:absolute;bottom:31px;width:1.5px;height:8px;background:var(--rule);transform:translateX(-50%)}
+.flag{position:absolute;bottom:37px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.flag b{font:700 22px/1 var(--cond);padding:5px 11px 4px;border-radius:99px;color:#fff;background:var(--green)}
+.flag.passed b,.flag.close b{background:var(--amber)}.flag.called b{background:var(--soft)}.flag.now b{background:var(--brick)}.flag.na b{background:var(--soft)}
+.flag i{width:2px;opacity:.55;background:var(--green)}.flag.passed i,.flag.close i{background:var(--amber)}.flag.called i{background:var(--soft)}.flag.now i{background:var(--brick)}.flag.na i{background:var(--soft)}
+.flag.now b{animation:pop .9s ease-out 1}
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.25)}100%{transform:scale(1)}}
+.pin{position:absolute;bottom:0;height:44px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left .8s ease}
+.pin .dot{width:15px;height:15px;border-radius:50%;background:var(--ink);border:3px solid var(--sheet);box-shadow:0 0 0 1.5px var(--ink);margin-top:-1px;flex:none}
+.pin em{font:600 14px/1 var(--serif);font-style:normal;color:var(--ink);margin-top:6px;white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.pin{transition:none}.flag.now b{animation:none}}
+.rows{border-top:1px solid var(--rule)}
+.mr{display:grid;grid-template-columns:76px 1fr auto auto;gap:20px;align-items:center;padding:18px 28px;border-top:1px solid var(--rule)}
+.mr:first-child{border-top:0}
+.mr .it{font:700 40px/1 var(--cond);letter-spacing:.005em}
+.mr .nm{font-weight:600;line-height:1.25}.mr .nm span{display:block;font-weight:400;color:var(--soft);font-size:16px}
+.mr .st{font:700 24px/1 var(--cond);min-width:92px;text-align:right}
+.mr.now .st{color:var(--brick)}.mr.close .st,.mr.passed .st{color:var(--amber)}.mr.called .st{color:var(--soft);font:400 16px var(--serif)}.mr.far .st{color:var(--green)}.mr.na .st,.mr.done .st{color:var(--soft);font:400 16px var(--serif)}
+.mr.now{background:var(--brickwash)}.mr.done{opacity:.55}.mr.done .nm{text-decoration:line-through}
+.mr .st small{display:block;margin-top:4px;font:400 15px/1.3 var(--serif);color:var(--soft)}
+.mr .ac{display:flex;align-items:center;gap:8px;justify-content:flex-end;min-width:132px}
+
+.empty{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:30px 26px}
+.empty p{margin:0 0 18px;max-width:46ch;color:var(--soft)}.empty p:last-child{margin:0}
+
+h2{font:600 28px/1.1 var(--serif);margin:64px 0 20px;letter-spacing:-.01em}
+.bh{display:flex;align-items:baseline;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;margin:64px 0 20px}.bh h2{margin:0}
+.ext{font-size:17px;color:var(--blue)}
+.tabs{display:flex;gap:44px;border-bottom:1.5px solid var(--rule)}
+.tabs button{border:0;background:none;padding:8px 4px 12px;font-weight:600;color:var(--soft);border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--brick)}
+.flt{display:flex;gap:32px;flex-wrap:wrap;font-size:17px;margin:20px 0 6px}.flt label{display:inline-flex;gap:7px;align-items:center}
+.flt input{accent-color:var(--ink);width:17px;height:17px}
+table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--sheet);border:1px solid var(--rule);margin-top:14px}
+col.k{width:16%}col.s{width:12%}col.g{width:14%}col.v{width:42%}col.l{width:16%}
+th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
+th{font-size:15px;color:var(--soft);font-weight:400}
+th.c,td.c{text-align:center}
+td{font-size:18px}
+tr.mine td{background:var(--amberwash)}tr.idle td{color:var(--soft)}tr.ex td{background:var(--wash);font-size:17px;text-align:left}
+td a,td button.lnk{font:700 24px/1 var(--cond)}
+td a{color:var(--blue)}td button.lnk{background:none;border:0;padding:0 4px;color:var(--blue);text-decoration:underline;text-underline-offset:4px}
+.star{color:var(--amber)}
+.fine{font-size:15px;color:var(--soft);margin-top:36px}
+
+dialog{border:0;border-radius:10px;padding:36px;width:min(560px,94vw);background:var(--sheet);color:var(--ink);box-shadow:0 24px 70px rgba(10,15,30,.45)}
+dialog::backdrop{background:rgba(10,15,30,.5)}
+dialog h3{font:600 32px/1.1 var(--serif);margin:0 0 8px}dialog .hint{color:var(--soft);margin:0 0 28px}
+.lbl{font-weight:700;margin:28px 0 10px}
+.seg2{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}.seg2 button{border:0;background:none;padding:8px 18px;font-weight:600}.seg2 button.on{background:var(--ink);color:var(--paper)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:end}
+select,input:not([type=checkbox]){width:100%;padding:10px 12px;border-radius:4px;border:1.5px solid var(--rule);background:var(--paper)}
+.row{display:flex;align-items:center;gap:14px;margin:16px 0;cursor:pointer}
+.sw{appearance:none;width:46px;height:26px;border-radius:99px;background:var(--rule);position:relative;flex:none;cursor:pointer;border:0;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}.sw:checked{background:var(--green)}.sw:checked::after{left:23px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:32px;flex-wrap:wrap}
+.fg{display:grid;grid-template-columns:repeat(12,1fr);gap:24px 16px;align-items:end}
+.fg label{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fg .t{font-weight:700;font-size:16px;white-space:nowrap}.fg .t i{font-style:normal;font-weight:400;color:var(--soft);margin-left:6px}
+.fg select,.fg input{height:50px}
+.c5{grid-column:span 5}.c7{grid-column:span 7}
+.c3{grid-column:span 3}.c2{grid-column:span 2}.c4{grid-column:span 4}.c6{grid-column:span 6}.c12{grid-column:span 12}
+.ordbtn{margin-left:14px;padding:2px 12px;border:1px solid var(--rule);border-radius:99px;background:none;font:400 15px var(--serif);color:var(--soft);vertical-align:middle}.ordbtn:hover{color:var(--ink);border-color:var(--ink)}
+.about{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);font-size:15px;color:var(--soft)}
+textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:17px/1.6 var(--serif);resize:vertical}
+.note{color:var(--green);min-height:1.6em;margin:12px 0 0;font-size:16px}
+@media(max-width:640px){main{padding:26px 16px 70px}.tabs{gap:24px}.mr{grid-template-columns:54px 1fr auto;gap:14px;padding:16px 18px}.gh{padding:18px 18px 12px}.mr .ac{grid-column:1/-1;justify-content:flex-start}.ruler{margin:8px 28px 2px}.fg{grid-template-columns:repeat(12,1fr)}.c2,.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c12{grid-column:span 12}.two{grid-template-columns:1fr}.gh .court{text-align:left}th,td{padding:10px 8px}}
+</style></head><body><main>
+
+<div class="topbar"><div class="brand">High Court of Karnataka Display Board Watcher</div>
+ <div class="tools"><button class="ico big" id="themeBtn" title="Switch between light and dark" aria-label="Switch between light and dark"></button><button class="ico big" id="setBtn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div></div>
+<header class="mast">
+ <div><h1 id="headline"></h1><div class="sum" id="sum"></div><div class="status" id="status"></div></div>
+ <div class="cta"><button class="btn" id="shareBtn">Share</button><button class="btn fill" id="addBtn">Add case</button></div>
+</header>
+
+<div id="matters"></div>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<div class="bh"><h2>Display board</h2><a class="ext" href="https://judiciary.karnataka.gov.in/display_board_bench.php" target="_blank" rel="noopener">Open the court's display board</a></div>
+<div class="tabs" id="tabs"></div>
+<div class="flt"><label><input type="checkbox" id="o_mine"> Only my courts</label><label><input type="checkbox" id="o_sit"> Sitting only</label></div>
+<div id="board"></div>
+<p class="fine">The board can lag the courtroom, and items are not always called in order, so passed-over items return later. Distances are a guide. Confirm in court. Hall numbers open the court's cause list, List shows passed-over cases, and Sl. No. shows the next cases.</p>
+
+<dialog id="dlgM"><form method="dialog" id="mform"><h3 id="mTitle">Add case</h3><p class="hint">Take the hall and item number from the day's cause list.</p>
+ <div class="fg">
+  <label class="c4"><span class="t">Bench</span><select id="f_bench"><option value="bengaluru">Bengaluru</option><option value="dharwad">Dharwad</option><option value="kalaburagi">Kalaburagi</option></select></label>
+  <label class="c3"><span class="t">Court hall</span><input id="f_hall" type="number" min="1" required></label>
+  <label class="c2"><span class="t">List no.</span><input id="f_list" type="number" min="1" value="1"></label>
+  <label class="c3"><span class="t">Item (Sl. No.)</span><input id="f_item" type="number" min="1" required></label>
+  <label class="c5"><span class="t">Case no.<i>optional</i></span><input id="f_case" placeholder="e.g. WP 12345/2026"></label>
+  <label class="c7"><span class="t">Case name<i>optional</i></span><input id="f_label" placeholder="e.g. Manjunath v State of Karnataka"></label>
+  <label class="c12"><span class="t">VC link<i>optional</i></span><input id="f_vc" type="url" placeholder="https://"></label>
+ </div>
+ <div class="foot"><button type="button" class="btn" id="mDel" hidden style="color:var(--brick);border-color:var(--brick)">Delete</button><span style="flex:1"></span><button type="button" class="btn" id="mCancel">Cancel</button>&nbsp;<button class="btn fill" id="mSave">Add case</button></div>
+</form></dialog>
+
+<dialog id="dlgS"><h3>Send today's positions</h3><p class="hint">Send the current position of every case.</p>
+ <div class="lbl" style="margin-top:0">Message</div>
+ <textarea id="sharetxt" rows="7"></textarea>
+ <p class="note" id="shareNote"></p>
+ <div class="foot"><span style="display:flex;gap:12px"><button class="btn fill" id="s_copy">Copy text</button><button class="btn" id="s_native" hidden>Share</button><a id="s_wa" target="_blank" rel="noopener" style="text-decoration:none"><button type="button" class="btn">WhatsApp</button></a></span><button class="btn" id="sClose">Close</button></div></dialog>
+
+<dialog id="dlgO"><form method="dialog" id="oform"><h3 id="oTitle">List order</h3>
+ <p class="hint" id="oHint"></p>
+ <label class="lbl" style="display:block;margin-top:0" for="o_val">Lists in the order the court calls them</label>
+ <input id="o_val" placeholder="e.g. 2, 1" autocomplete="off">
+ <p class="hint" style="margin:12px 0 0;font-size:16px">Lists you leave out are called afterwards, in number order.</p>
+ <div class="foot"><button type="button" class="btn" id="oReset">Use number order</button><span style="flex:1"></span><button type="button" class="btn" id="oCancel">Cancel</button>&nbsp;<button class="btn fill">Save</button></div>
+</form></dialog>
+
+<dialog id="dlgD"><form method="dialog" id="dform"><h3>Cases from an earlier day</h3>
+ <p class="hint" id="dText"></p>
+ <div id="dRows"></div>
+ <div class="foot"><button type="button" class="btn" id="dClear" style="color:var(--brick);border-color:var(--brick)">Clear all cases</button><span style="flex:1"></span><button class="btn fill" id="dSave">Save for today</button></div>
+</form></dialog>
+
+<dialog id="dlgG"><h3>Settings</h3><p class="hint">Saved in this browser only.</p>
+ <div class="lbl" style="margin-top:0">Theme</div>
+ <div class="seg2" id="theme"><button data-v="device">Device</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+ <div class="two"><div><div class="lbl">Count a case as close within</div><select id="g_thr"></select></div>
+  <div><div class="lbl">Refresh the board every</div><select id="g_ref"><option value="30">30 seconds</option><option value="45">45 seconds</option><option value="60">60 seconds</option><option value="90">90 seconds</option></select></div></div>
+ <div class="lbl">When a case is close or on</div>
+ <label class="row"><input type="checkbox" class="sw" id="g_snd"> Play a sound and show a notification</label>
+ <label class="row"><input type="checkbox" class="sw" id="g_say"> Read the alert aloud</label>
+ <div class="lbl">Screen</div>
+ <label class="row"><input type="checkbox" class="sw" id="g_wake"> Stop the screen sleeping while this page is open</label>
+ <div class="foot"><button class="btn" id="g_clr">Remove all cases</button><button class="btn fill" id="gDone">Done</button></div>
+ <div class="about"><b>About.</b> A personal watcher for the display board of the High Court of Karnataka (Bengaluru, Dharwad and Kalaburagi). It runs on your own computer and reads the court's public board no faster than every 30 seconds. Passed-over and next cases are fetched only when you click them. The board can lag the courtroom, so always confirm in court.</div>
+</dialog>
+
+<script>
+const $=id=>document.getElementById(id);
+const BASE='https://judiciary.karnataka.gov.in/';
+const CODE={bengaluru:'B',dharwad:'D',kalaburagi:'K'}, NAME={bengaluru:'Bengaluru',dharwad:'Dharwad',kalaburagi:'Kalaburagi'};
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let matters=LS.get('hck_matters',[]), cfg=Object.assign({orders:{},thr:3,ref:45,snd:false,say:false,theme:'device',bench:'bengaluru',mine:false,sit:true},LS.get('hck_cfg',{})), last={}, snap=null, exp={}, wakeLock=null, editId=null;
+const save=()=>LS.set('hck_matters',matters), saveCfg=()=>LS.set('hck_cfg',cfg);
+const normCase=s=>{s=(s||'').toUpperCase().replace(/[.\s]+/g,' ').replace(' NO ',' ').trim();const m=s.match(/^([A-Z ()]+?)\s*(\d+)\s*\/\s*(\d{4})/);return m?m[1].replace(/ /g,'')+' '+m[2]+'/'+m[3]:s};
+const safeUrl=u=>{try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return ''}};
+const ICON={sun:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',moon:'<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',vc:'<svg viewBox="0 0 24 24"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m22 8-7 4 7 4Z"/></svg>'};
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(k==='class')e.className=v;else if(k==='html')e.innerHTML=v;else if(k.startsWith('on'))e[k]=v;else if(v!==false&&v!=null)e.setAttribute(k,v)}
+  kids.flat().forEach(c=>e.append(c instanceof Node?c:document.createTextNode(c??'')));return e}
+const open=d=>{try{d.showModal()}catch(e){d.setAttribute('open','')}}, close=d=>{try{d.close()}catch(e){d.removeAttribute('open')}};
+const WORDS=['no','one','two','three','four','five','six','seven','eight','nine','ten'];
+
+const aux={cl:{},pa:{}};
+const effCase=m=>m.case||(aux.cl[m.bench+'|'+m.hall]?.value?.lists?.[String(m.list)]?.[String(m.item)])||'';
+const hallKey=m=>m.bench+'|'+m.hall;
+const listOrder=m=>cfg.orders[hallKey(m)]||[];
+/* Lists the user has not ordered are called after the ordered ones, by list number. */
+function listRank(list,order){const i=order.indexOf(Number(list));return i>=0?i:order.length+Number(list)}
+const listLength=(lists,list)=>Math.max(0,...Object.keys(lists?.[list]||{}).map(Number));
+
+/* Where a case sits against the board: on the same list, on a list still to come, or on one already taken up. */
+function relation(m,row){
+  if(String(row.list)===String(m.list))return 'same';
+  const order=listOrder(m);
+  return listRank(m.list,order)>listRank(row.list,order)?'ahead':'behind';
+}
+/* Cases left in the board's list, plus every list between, plus your item. Needs the cause list. */
+function casesToLaterList(m,row){
+  const lists=aux.cl[hallKey(m)]?.value?.lists;
+  if(!lists||!lists[row.list]||!lists[m.list])return null;
+  const order=listOrder(m), from=listRank(row.list,order), to=listRank(m.list,order);
+  let n=listLength(lists,row.list)-row.sl;
+  for(const l of Object.keys(lists)){const r=listRank(l,order);if(r>from&&r<to)n+=listLength(lists,l)}
+  return n+Number(m.item);
+}
+function lookup(store,key,maxAge,url,read){
+  const e=store[key]=store[key]||{t:0,busy:false,value:null};
+  if(e.busy||Date.now()-e.t<maxAge)return;
+  e.busy=true;
+  fetch(url).then(r=>r.json()).then(j=>{e.value=j.ok?read(j):null}).catch(()=>{e.value=null}).finally(()=>{e.busy=false;e.t=Date.now();render()});
+}
+function wantAux(){
+  const board=snap?.data; if(!board)return;
+  matters.forEach(m=>{
+    if(m.done)return;
+    const code=CODE[m.bench], row=(board.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
+    const sitting=row&&row.status==='sitting', rel=sitting?relation(m,row):null;
+    const query=`bench=${code}&hall=${m.hall}`;
+    if(!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists}));
+    if(rel==='behind'||(rel==='same'&&m.item<row.sl))lookup(aux.pa,hallKey(m),60000,`/api/passed?${query}`,j=>{const list=j.items.map(normCase);return{list,set:new Set(list)}});
+  });
+}
+/* kind: now | passed | close | far | called | na. */
+function evaluate(m,board){
+  const rows=(board?.benches?.[m.bench])||[]; const row=rows.find(r=>String(r.hall)===String(m.hall));
+  const base={k:'na',short:'',txt:'',cur:null,row};
+  const ec=effCase(m);
+  if(ec){const nc=normCase(ec);const hit=rows.find(r=>r.status==='sitting'&&r.case_norm===nc);
+    if(hit)return{k:'now',short:'On now',txt:`On now in Court ${hit.hall} (item ${hit.sl})`,cur:hit.sl,row:hit,d:0}}
+  if(!board)return{...base,short:'Waiting',txt:'Waiting for the board'};
+  if(!row)return{...base,short:'No data',txt:'No data for this hall'};
+  if(row.status==='no_session')return{...base,short:'No session',txt:'No session in this hall'};
+  if(row.status==='no_sitting')return{...base,short:'Not sitting',txt:'Not sitting today'};
+
+  const rel=relation(m,row);
+  const place={cur:row.sl,row,at:rel==='same'?`item ${row.sl}`:`list ${row.list}, item ${row.sl}`};
+  const away=d=>{const k=d<=cfg.thr?'close':'far';
+    return{...place,k,d,short:`${d} away`,txt:`${d} case${d>1?'s':''} away${k==='close'?', get ready':''}`}};
+
+  if(rel==='ahead'){
+    const d=casesToLaterList(m,row);
+    return d==null?{...base,...place,short:'Not yet',txt:`List ${m.list} is called after list ${row.list}`}:away(d);
+  }
+  const d=rel==='same'?m.item-row.sl:null;
+  if(d===0)return{...place,k:'now',short:'On now',txt:'On now',d};
+  if(d>0)return away(d);
+
+  const passed=aux.pa[hallKey(m)]?.value, c=effCase(m);
+  if(passed&&c){
+    const spot=passed.list.indexOf(normCase(c))+1;
+    if(!spot)return{...base,...place,k:'called',short:'Called',txt:'Already called',d};
+    const sub=`number ${spot} of ${passed.list.length} on the passed-over list`;
+    return{...base,...place,k:'passed',short:'Passed over',sub,txt:`Passed over, ${sub}`,d};
+  }
+  return{...base,...place,short:'Passed?',txt:d==null?`List ${m.list} has already been taken up`:`Board is ${-d} past your item`,d};
+}
+function beep(){try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator();o.connect(c.destination);o.frequency.value=880;o.start();setTimeout(()=>{o.stop();c.close()},350)}catch(e){}}
+const nm=m=>m.label||effCase(m)||'';
+function alertFor(m,r){const msg=`${nm(m)||'Court '+m.hall} item ${m.item}: ${r.txt}`;
+  if(cfg.snd){beep();try{if(Notification.permission==='granted')new Notification('HCK Board',{body:msg})}catch(e){}}
+  if(cfg.say&&window.speechSynthesis)speechSynthesis.speak(new SpeechSynthesisUtterance(msg.replace(/\s*\/\s*/g,' of ')))}
+const ORDER={now:0,passed:1,close:2,far:3,na:4,called:5};
+
+const where=m=>{const multi=new Set(matters.filter(x=>x.bench===m.bench&&x.hall===m.hall).map(x=>String(x.list))).size>1;
+  return `Item ${m.item} in Court ${m.hall}`+(multi||String(m.list)!=='1'?`, list ${m.list},`:'')};
+function renderHeader(evals){
+  const all=evals.filter(x=>!x.m.done), called=all.filter(x=>x.r.k==='called').length;
+  const act=all.filter(x=>x.r.k!=='called').sort((a,b)=>(ORDER[a.r.k]-ORDER[b.r.k])||((a.r.d??1e9)-(b.r.d??1e9)));
+  const hl=$('headline');hl.replaceChildren();
+  if(!matters.length)hl.append('No cases yet.');
+  else if(!act.length)hl.append(called?'All your cases have been called.':'All cases are done for today.');
+  else{const {m,r}=act[0];
+    if(r.k==='now')hl.append(where(m)+' is ',h('span',{class:'u'},'on now'),'.');
+    else if(r.k==='close'||r.k==='far'){const n=r.d;hl.append(where(m)+' is ',h('span',{class:r.k==='close'?'w':''},`${n<=10?WORDS[n]:n} case${n>1?'s':''}`),' away.')}
+    else if(r.k==='passed')hl.append(where(m)+' has been ',h('span',{class:'w'},'passed over'),'.');
+    else hl.append(`Court ${m.hall}: ${r.txt.charAt(0).toLowerCase()+r.txt.slice(1)}.`)}
+  const now=act.filter(x=>x.r.k==='now').length, close=act.filter(x=>x.r.k==='close').length, pas=act.filter(x=>x.r.k==='passed').length;
+  const s=$('sum');s.replaceChildren();
+  if(!matters.length)s.append('Add a case and the board will count the items down for you.');
+  else if(act.length||called){if(act.length)s.append(`${act.length} case${act.length>1?'s':''} to go.`);if(called)s.append(`${act.length?' ':''}${called} already called.`);if(pas)s.append(' ',h('span',{class:'warm'},`${pas} passed over`),'.');if(now)s.append(' ',h('span',{class:'hot'},`${now} on now`));if(close)s.append(now?', ':' ',h('span',{class:'warm'},`${close} within ${cfg.thr} case${cfg.thr>1?'s':''}`));if(now||close)s.append('.')}
+  const st=$('status');st.replaceChildren();
+  st.append(new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',',''));
+  st.append(snap?.data?.updated?`, board updated ${snap.data.updated.replace(/^\S+\s+/,'')}`:', connecting to the board');
+  if(snap?.fetched_at)st.append(`, fetched ${Math.max(0,Math.round(Date.now()/1000-snap.fetched_at))}s ago`);
+  if(snap?.error)st.append('. ',h('span',{class:'e'},'Court site: '+snap.error));
+  $('shareBtn').hidden=!matters.length;
+}
+
+/* a ruler of item numbers for one hall: your items as flags, the court as a marker */
+function buildRuler(items,cur){
+  const nums=items.map(x=>x.m.item).concat(cur!=null?[cur]:[]);
+  const start=Math.min(...nums), end=Math.max(...nums), L=end-start;
+  const pos=n=>L===0?0.5:(n-start)/L;
+  const flags=items.map(x=>({n:x.m.item,k:x.r.k,p:pos(x.m.item)})).sort((a,b)=>a.p-b.p);
+  let lvl=0,prev=null;flags.forEach(f=>{lvl=(prev!==null&&f.p-prev<0.075)?(lvl+1)%2:0;f.lvl=lvl;prev=f.p});
+  const tall=flags.some(f=>f.lvl===1);
+  const box=h('div',{class:'ruler'+(tall?' tall':'')},h('div',{class:'track'}));
+  if(L>0&&L<=30)for(let n=start;n<=end;n++)box.append(h('div',{class:'tk',style:`left:${pos(n)*100}%`}));
+  if(cur!=null){const ahead=flags.filter(f=>f.n>cur).sort((a,b)=>a.n-b.n)[0];
+    if(ahead)box.append(h('div',{class:'seg '+ahead.k,style:`left:${pos(cur)*100}%;width:${(pos(ahead.n)-pos(cur))*100}%`}))}
+  flags.forEach(f=>box.append(h('div',{class:'flag '+f.k,style:`left:${f.p*100}%`},h('b',{},String(f.n)),h('i',{style:`height:${10+f.lvl*34}px`}))));
+  if(cur!=null)box.append(h('div',{class:'pin',style:`left:${pos(cur)*100}%`},h('span',{class:'dot'}),h('em',{},`court on ${cur}`)));
+  return box;
+}
+
+function renderMatters(evals){
+  const el=$('matters');el.replaceChildren();
+  if(!matters.length){el.append(h('div',{class:'empty'},h('p',{},'Enter the bench, court hall and item number from the cause list.'),h('p',{},h('button',{class:'btn fill',onclick:()=>openMatter()},'Add your first case'))));return}
+  const groups={};
+  evals.forEach(x=>{const key=`${x.m.bench}|${x.m.hall}|${x.m.list}`;(groups[key]=groups[key]||[]).push(x)});
+  const list=Object.values(groups).map(g=>{const act=g.filter(x=>!x.m.done);const best=act.length?Math.min(...act.map(x=>ORDER[x.r.k]*1000+(x.r.d??999))):1e6;return{g,act,best}}).sort((a,b)=>a.best-b.best);
+  list.forEach(({g,act})=>{
+    const m0=g[0].m, row=g[0].r.row, sitting=row&&row.status==='sitting';
+    const cur=sitting&&String(row.list)===String(m0.list)?row.sl:null;
+    const head=h('div',{class:'gh'},h('div',{class:'hall'},`Court ${m0.hall}`,h('small',{},`${NAME[m0.bench]}${String(m0.list)!=='1'?', list '+m0.list:''}`),
+      h('button',{class:'ordbtn',type:'button',title:'Set the order the court calls the lists',onclick:()=>openOrder(m0)},listOrder(m0).length?`Lists called: ${listOrder(m0).join(', then ')}`:'List order')),
+      h('div',{class:'court'},sitting?[h('b',{},`item ${row.sl}`),`${row.case}, stage ${row.stage}${String(row.list)!==String(m0.list)?', on list '+row.list:''}`]:(g[0].r.txt||'')));
+    const rows=h('div',{class:'rows'});
+    g.sort((a,b)=>(a.m.done-b.m.done)||(a.m.item-b.m.item)).forEach(({m,r})=>{
+      const vc=safeUrl(m.vc);
+      rows.append(h('div',{class:`mr ${m.done?'done':r.k}`},
+        h('div',{class:'it'},String(m.item)),
+        h('div',{class:'nm'},nm(m)||'Case',m.label&&effCase(m)?h('span',{},effCase(m)):null),
+        h('div',{class:'st'},m.done?'Done':r.short,!m.done&&r.sub?h('small',{},r.sub):null),
+        h('div',{class:'ac'},
+          vc?h('a',{href:vc,target:'_blank',rel:'noopener',style:'text-decoration:none'},h('button',{class:'btn sm vc',type:'button',html:ICON.vc+'Join hearing'})):null,
+          h('button',{class:'ico',title:m.done?'Mark not done':'Mark done',html:ICON.check,onclick:()=>{m.done=!m.done;save();render()}}),
+          h('button',{class:'ico',title:'Edit',html:ICON.edit,onclick:()=>openMatter(m)}),
+          h('button',{class:'ico',title:'Delete',html:ICON.trash,onclick:()=>removeCase(m)}))));
+    });
+    const grp=h('section',{class:'grp'},head);
+    if(act.length&&cur!=null)grp.append(buildRuler(act,cur));
+    grp.append(rows);el.append(grp);
+  });
+}
+function shareText(){
+  const d=new Date(), when=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+', '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const lower=t=>t.charAt(0).toLowerCase()+t.slice(1);
+  const pos=r=>{
+    if(r.k==='now')return 'on now';
+    if(r.k==='called')return 'already called';
+    if(r.k==='passed')return `passed over, ${r.sub} (board at ${r.at})`;
+    if(r.d!=null)return r.d<0?`board at ${r.at}, past our item`:`board at ${r.at}, ${r.d} case${r.d===1?'':'s'} away`;
+    return r.at?`board at ${r.at}, ${lower(r.txt)}`:lower(r.txt)};
+  const lines=matters.filter(m=>!m.done).map(m=>{const r=evaluate(m,snap?.data);
+    return `• ${NAME[m.bench]} Court ${m.hall}, list ${m.list}, item ${m.item}${nm(m)?', '+nm(m):''}: ${pos(r)}${safeUrl(m.vc)?'\n   VC: '+safeUrl(m.vc):''}`});
+  return `Karnataka High Court board, ${when}\n`+(lines.join('\n')||'(no cases)')+'\n\nThe board can lag the courtroom. Confirm in court.';
+}
+
+function toggle(key){const e=exp[key];if(e&&e.open)e.open=false;else exp[key]={open:true,sig:null,items:null,err:null,loading:false};render()}
+function ensure(key,url,sig){const e=exp[key];if(!e||!e.open||e.loading||e.sig===sig)return;e.loading=true;e.sig=sig;
+  fetch(url,{cache:'no-store'}).then(r=>r.json()).then(j=>{e.loading=false;if(j.ok){e.items=j.items;e.err=null}else e.err=j.error;render()}).catch(()=>{e.loading=false;e.err='Watcher not reachable';render()})}
+function renderBoard(){
+  const b=cfg.bench, code=CODE[b], rows=(snap?.data?.benches?.[b])||[];
+  $('tabs').replaceChildren(...Object.keys(NAME).map(k=>h('button',{class:cfg.bench===k?'on':'',onclick:()=>{cfg.bench=k;saveCfg();render()}},NAME[k])));
+  const mineHalls=new Set(matters.filter(m=>m.bench===b&&!m.done).map(m=>String(m.hall)));
+  const shown=rows.filter(r=>(!cfg.mine||mineHalls.has(String(r.hall)))&&(!cfg.sit||r.status==='sitting'||mineHalls.has(String(r.hall))));
+  const host=$('board');host.replaceChildren();
+  if(!snap?.data){host.append(h('div',{class:'empty'},h('p',{},'Waiting for the board.')));return}
+  if(!shown.length){host.append(h('div',{class:'empty'},h('p',{},cfg.mine&&!mineHalls.size?'You have no cases on this bench.':'No halls match. Courts may not be sitting yet.')));return}
+  const tb=h('tbody');
+  shown.forEach(r=>{
+    const mine=mineHalls.has(String(r.hall)), sitting=r.status==='sitting';
+    const hallCell=h('td',{class:'c'},r.status==='no_sitting'?h('span',{style:'font:700 24px/1 var(--cond)'},String(r.hall)):h('a',{href:`${BASE}causelist_specific_c.php?bench=${code}&hallno=${r.hall}`,target:'_blank',rel:'noopener',title:'Open cause list'},String(r.hall)),mine?h('span',{class:'star',title:'You have a case here'},' ★'):'');
+    if(!sitting){tb.append(h('tr',{class:'idle'+(mine?' mine':'')},hallCell,h('td',{colspan:4},r.status==='no_session'?'No session':'No sitting')));return}
+    const kp=`${b}-${r.hall}-p`, kn=`${b}-${r.hall}-n`;
+    tb.append(h('tr',{class:mine?'mine':''},hallCell,
+      h('td',{class:'c'},h('button',{class:'lnk',title:'Passed-over cases',onclick:()=>toggle(kp)},r.list)),
+      h('td',{class:'c'},h('button',{class:'lnk',title:'Next cases',onclick:()=>toggle(kn)},String(r.sl))),
+      h('td',{},r.case),h('td',{},r.stage)));
+    const ep=exp[kp],en=exp[kn];
+    if(ep?.open){ensure(kp,`/api/passed?bench=${code}&hall=${r.hall}`,`${r.list}`+(snap.data.updated||''));
+      tb.append(h('tr',{class:'ex'},h('td',{colspan:5},ep.items&&!ep.items.length?h('b',{},`No cases passed over in Court ${r.hall}`):[h('b',{},`Passed over in Court ${r.hall}: `),ep.err?ep.err:ep.items?ep.items.join(', '):'loading'])))}
+    if(en?.open){ensure(kn,`/api/next?bench=${code}&hall=${r.hall}&sitcode=${r.sitcode||0}&list=${r.list}&sl=${r.sl}`,`${r.list}-${r.sl}`);
+      tb.append(h('tr',{class:'ex'},h('td',{colspan:5},h('b',{},`Next in Court ${r.hall}, list ${r.list}: `),en.err?en.err:en.items?(en.items.length?en.items.map(i=>`${i.sl}. ${i.case}`).join('   '):'none'):'loading')))}
+  });
+  const cols=h('colgroup',{},h('col',{class:'k'}),h('col',{class:'s'}),h('col',{class:'g'}),h('col',{class:'v'}),h('col',{class:'l'}));
+  const heads=[['Court','c'],['List','c'],['Sl. No.','c'],['Case no.',''],['Stage','']];
+  host.append(h('table',{},cols,h('thead',{},h('tr',{},...heads.map(([x,c])=>h('th',{class:c},x)))),tb));
+}
+function render(){
+  wantAux();
+  const evals=matters.map(m=>({m,r:evaluate(m,snap?.data)}));
+  evals.forEach(({m,r})=>{const prev=last[m.id];if(prev&&prev!==r.k&&(r.k==='now'||r.k==='close')&&!m.done)alertFor(m,r);last[m.id]=r.k});
+  renderHeader(evals);renderMatters(evals);renderBoard();
+  if($('dlgS').hasAttribute('open'))fillShare();
+}
+async function poll(){
+  try{const r=await fetch('/api/board?interval='+cfg.ref,{cache:'no-store'});snap=await r.json()}
+  catch(e){snap=Object.assign(snap||{},{error:'watcher not reachable'})}
+  render();
+}
+
+function openMatter(m){editId=m?m.id:null;
+  $('mTitle').textContent=m?'Edit case':'Add case';$('mSave').textContent=m?'Save changes':'Add case';$('mDel').hidden=!m;
+  $('f_bench').value=m?.bench||cfg.bench;$('f_hall').value=m?.hall??'';$('f_list').value=m?.list??'1';$('f_item').value=m?.item??'';$('f_case').value=m?.case||'';$('f_label').value=m?.label||'';$('f_vc').value=m?.vc||'';
+  open($('dlgM'));}
+$('addBtn').onclick=()=>openMatter();
+$('mCancel').onclick=()=>close($('dlgM'));
+$('mform').onsubmit=e=>{e.preventDefault();
+  const vc=$('f_vc').value.trim();if(vc&&!safeUrl(vc)){alert('The VC link must start with http:// or https://');return}
+  const v={bench:$('f_bench').value,hall:+$('f_hall').value,list:$('f_list').value||'1',item:+$('f_item').value,case:$('f_case').value.trim(),label:$('f_label').value.trim(),vc};
+  if(!v.hall||!v.item)return;
+  if(editId){Object.assign(matters.find(x=>x.id===editId),v)}else matters.push({id:Date.now()+'',done:false,...v});
+  save();close($('dlgM'));render()};
+function toast(msg,label,fn){const t=$('toast');t.replaceChildren(msg,h('button',{onclick:()=>{fn();t.hidden=true}},label));t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>{t.hidden=true},7000)}
+function removeCase(m){const i=matters.findIndex(x=>x.id===m.id);if(i<0)return;const [gone]=matters.splice(i,1);save();render();
+  toast('Case deleted.','Undo',()=>{matters.splice(Math.min(i,matters.length),0,gone);save();render()})}
+$('mDel').onclick=()=>{const m=matters.find(x=>x.id===editId);close($('dlgM'));if(m)removeCase(m)};
+
+let orderKey=null;
+function openOrder(m){orderKey=hallKey(m);
+  $('oTitle').textContent=`List order, Court ${m.hall}`;
+  $('oHint').textContent=`Some courts take up list 2 before list 1. Tell the watcher the order for HCK ${NAME[m.bench]} Court ${m.hall}; it decides how far away each case is.`;
+  $('o_val').value=listOrder(m).join(', ');open($('dlgO'))}
+function saveOrder(order){if(order.length)cfg.orders[orderKey]=order;else delete cfg.orders[orderKey];saveCfg();close($('dlgO'));render()}
+$('oform').onsubmit=e=>{e.preventDefault();saveOrder([...new Set(($('o_val').value.match(/\d+/g)||[]).map(Number))])};
+$('oReset').onclick=()=>saveOrder([]);
+$('oCancel').onclick=()=>close($('dlgO'));
+
+let shareDirty=false;
+function fillShare(force){if(shareDirty&&!force)return;const t=shareText();$('sharetxt').value=t;$('s_wa').href='https://wa.me/?text='+encodeURIComponent(t)}
+$('shareBtn').onclick=()=>{shareDirty=false;$('shareNote').textContent='';fillShare(true);$('s_native').hidden=!navigator.share;open($('dlgS'))};
+$('sharetxt').oninput=()=>{shareDirty=true};
+$('s_wa').onclick=()=>{$('s_wa').href='https://wa.me/?text='+encodeURIComponent($('sharetxt').value)};
+$('sClose').onclick=()=>close($('dlgS'));
+$('s_copy').onclick=async()=>{try{await navigator.clipboard.writeText($('sharetxt').value);$('shareNote').textContent='Message copied.'}catch(e){$('sharetxt').select();$('shareNote').textContent='Press Cmd+C to copy the selected text.'}};
+$('s_native').onclick=()=>{try{navigator.share({text:$('sharetxt').value})}catch(e){}};
+
+const isDark=()=>cfg.theme==='dark'||(cfg.theme==='device'&&matchMedia('(prefers-color-scheme: dark)').matches);
+function applyTheme(){const t=cfg.theme;if(t==='device')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('#theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===t));$('themeBtn').innerHTML=isDark()?ICON.sun:ICON.moon}
+$('themeBtn').onclick=()=>{cfg.theme=isDark()?'light':'dark';saveCfg();applyTheme()};
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme)}catch(e){}
+for(let i=1;i<=10;i++)$('g_thr').append(h('option',{value:i},`${i} case${i>1?'s':''}`));
+$('g_thr').value=cfg.thr;$('g_ref').value=String(cfg.ref);$('g_snd').checked=cfg.snd;$('g_say').checked=cfg.say;$('o_mine').checked=cfg.mine;$('o_sit').checked=cfg.sit;
+document.querySelectorAll('#theme button').forEach(b=>b.onclick=()=>{cfg.theme=b.dataset.v;saveCfg();applyTheme()});
+$('g_thr').onchange=e=>{cfg.thr=+e.target.value;saveCfg();render()};
+$('g_ref').onchange=e=>{cfg.ref=+e.target.value;saveCfg();poll()};
+$('g_snd').onchange=e=>{cfg.snd=e.target.checked;saveCfg();if(cfg.snd){try{Notification.requestPermission()}catch(x){}beep()}};
+$('g_say').onchange=e=>{cfg.say=e.target.checked;saveCfg()};
+$('o_mine').onchange=e=>{cfg.mine=e.target.checked;saveCfg();render()};$('o_sit').onchange=e=>{cfg.sit=e.target.checked;saveCfg();render()};
+$('g_clr').onclick=()=>{if(confirm('Remove all cases?')){matters=[];save();render()}};
+$('setBtn').onclick=()=>open($('dlgG'));$('gDone').onclick=()=>close($('dlgG'));
+async function setWake(on){try{if(on){wakeLock=await navigator.wakeLock.request('screen')}else{await wakeLock?.release();wakeLock=null}$('g_wake').checked=on}catch(e){$('g_wake').checked=false;wakeLock=null}}
+$('g_wake').onchange=e=>setWake(e.target.checked);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&$('g_wake').checked)setWake(true)});
+
+const dayKey=()=>new Date().toLocaleDateString('en-CA');
+const dayLabel=k=>new Date(k+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',','');
+let carry=[];
+function checkNewDay(){
+  const today=dayKey(), was=LS.get('hck_day',null);
+  if(was===today)return;
+  if(!was||!matters.length){LS.set('hck_day',today);return}
+  if(!$('dlgD').open)openDay(was);
+}
+function openDay(was){
+  $('dText').textContent=`These cases are from ${dayLabel(was)}. A case that was not heard is often listed again with a different list or item number. Update it here and keep it, or remove it.`;
+  carry=matters.map(m=>{
+    const keep=h('input',{type:'checkbox',checked:!m.done,'aria-label':'Keep this case'});
+    const list=h('input',{type:'number',min:1,value:m.list,'aria-label':'List no.'});
+    const item=h('input',{type:'number',min:1,value:m.item,'aria-label':'Item no.'});
+    const no=effCase(m);
+    const row=h('div',{class:'dr'+(m.done?' off':'')},keep,
+      h('div',{class:'who'},h('b',{},m.label||no||'Untitled case'),h('small',{},`${NAME[m.bench]} Court ${m.hall}${m.label&&no?', '+no:''}`)),list,item);
+    keep.onchange=()=>row.classList.toggle('off',!keep.checked);
+    return{m,keep,list,item,row};
+  });
+  $('dRows').replaceChildren(h('div',{class:'dr dh'},h('span'),h('span',{},'Case'),h('span',{},'List'),h('span',{},'Item')),...carry.map(c=>c.row));
+  open($('dlgD'));
+}
+function finishDay(kept,msg){
+  matters=kept;cfg.orders={};save();saveCfg();LS.set('hck_day',dayKey());
+  close($('dlgD'));render();if(msg)toast(msg,'OK',()=>{});
+}
+$('dlgD').addEventListener('cancel',e=>e.preventDefault());
+$('dClear').onclick=()=>finishDay([],'Cases cleared.');
+$('dform').onsubmit=e=>{e.preventDefault();
+  const kept=[];
+  for(const c of carry){
+    if(!c.keep.checked)continue;
+    const list=Math.floor(+c.list.value), item=Math.floor(+c.item.value);
+    if(!(list>=1)||!(item>=1)){alert('Enter a list and item number for each case you keep.');return}
+    kept.push(Object.assign(c.m,{list:String(list),item,done:false}));
+  }
+  finishDay(kept,kept.length?`${kept.length} case${kept.length>1?'s':''} saved for today.`:'Cases cleared.');
+};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkNewDay()});
+setInterval(checkNewDay,60000);
+
+applyTheme();render();checkNewDay();poll();setInterval(poll,10000);
+setInterval(()=>{if(snap)renderHeader(matters.map(m=>({m,r:evaluate(m,snap?.data)})))},1000);
+</script></main></body></html>
