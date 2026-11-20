@@ -1,6 +1,5 @@
 # High Court of Karnataka Display Board Watcher
 
-![Status](https://img.shields.io/badge/Status-Personal%20use-1f6f78)
 ![Python](https://img.shields.io/badge/Python-3%2C%20standard%20library%20only-3776ab)
 ![License](https://img.shields.io/badge/License-MIT-green)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24391244.svg)](https://doi.org/10.5281/zenodo.24391244)
@@ -243,4 +242,14 @@ The watcher listens on this computer only (`127.0.0.1`, port 8765 by default). U
 
 ## License
 
-Released under the [MIT License](LICENSE).
+MIT License. See `LICENSE` for details.
+
+---
+
+## Citation
+
+**Software (GitHub):**
+
+```text
+Ratnam, A. R. (2026). *High Court of Karnataka Display Board Watcher* (Version 1.0.1) [Computer software]. GitHub. https://github.com/adityaratnam09/hck-court-watcher
+```
