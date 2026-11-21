@@ -175,6 +175,8 @@ def make_handler(poller):
                     h = int(q["hall"])
                     if path == "/api/causelist":
                         res = cached(("c", b, h), 900, lambda: get_causelist(b, h))
+                        if not res:  # an empty page is not worth remembering
+                            _cache.pop(("c", b, h), None)
                         out = {"ok": True, "lists": res}
                         body, ctype = json.dumps(out).encode(), "application/json"
                         self.send_response(200)

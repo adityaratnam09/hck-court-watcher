@@ -13,7 +13,7 @@
 [data-theme=dark]{--paper:#15191a;--sheet:#1d2224;--ink:#e6e9e3;--soft:#9ba39b;--rule:#353d3b;--wash:#262c2b;--brick:#e8806d;--brickwash:#3b2420;--amber:#e3ac52;--amberwash:#352b18;--green:#74c096;--greenwash:#1a3226;--blue:#a2b6e6}
 *{box-sizing:border-box}
 body{margin:0;font:19px/1.55 var(--serif);background:var(--paper);color:var(--ink)}
-main{max-width:1320px;margin:0 auto;padding:28px clamp(20px,4vw,56px) 90px}
+main{max-width:1060px;margin:0 auto;padding:28px clamp(20px,4vw,56px) 90px}
 button,input,select{font:inherit;color:var(--ink)}button{cursor:pointer}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 a{color:var(--blue)}
@@ -35,7 +35,7 @@ svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-l
 #dlgD{width:min(700px,94vw)}
 .dr{display:grid;grid-template-columns:28px 1fr 84px 96px;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
 .dr.dh{border-top:0;padding:4px 0;color:var(--soft);font-size:15px}
-.dr .who b{display:block}.dr .who small{color:var(--soft)}.dr.off .who,.dr.off input[type=number]{opacity:.45}
+.dr .who b{display:block;font-size:18px;font-weight:600}.dr .who small{color:var(--soft)}.dr.off .who,.dr.off input[type=number]{opacity:.45}
 @media(max-width:520px){.dr{grid-template-columns:28px 1fr 64px 72px;gap:8px}}
 ::placeholder{font-size:16px}
 h1{font:600 clamp(30px,5.2vw,50px)/1.08 var(--serif);letter-spacing:-.015em;margin:0}
@@ -86,7 +86,7 @@ h2{font:600 28px/1.1 var(--serif);margin:64px 0 20px;letter-spacing:-.01em}
 .flt{display:flex;gap:32px;flex-wrap:wrap;font-size:17px;margin:20px 0 6px}.flt label{display:inline-flex;gap:7px;align-items:center}
 .flt input{accent-color:var(--ink);width:17px;height:17px}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--sheet);border:1px solid var(--rule);margin-top:14px}
-col.k{width:16%}col.s{width:12%}col.g{width:14%}col.v{width:42%}col.l{width:16%}
+col.k{width:15%}col.s{width:14%}col.g{width:15%}col.v{width:26%}col.l{width:30%}
 th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
 th{font-size:15px;color:var(--soft);font-weight:400}
 th.c,td.c{text-align:center}
@@ -141,9 +141,9 @@ textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5
  <div class="fg">
   <label class="c4"><span class="t">Bench</span><select id="f_bench"><option value="bengaluru">Bengaluru</option><option value="dharwad">Dharwad</option><option value="kalaburagi">Kalaburagi</option></select></label>
   <label class="c3"><span class="t">Court hall</span><input id="f_hall" type="number" min="1" required></label>
-  <label class="c2"><span class="t">List no.</span><input id="f_list" type="number" min="1" value="1"></label>
+  <label class="c2"><span class="t">List No.</span><input id="f_list" type="number" min="1" value="1"></label>
   <label class="c3"><span class="t">Item (Sl. No.)</span><input id="f_item" type="number" min="1" required></label>
-  <label class="c5"><span class="t">Case no.<i>optional</i></span><input id="f_case" placeholder="e.g. WP 12345/2026"></label>
+  <label class="c5"><span class="t">Case No.<i>optional</i></span><input id="f_case" placeholder="e.g. WP 12345/2026"></label>
   <label class="c7"><span class="t">Case name<i>optional</i></span><input id="f_label" placeholder="e.g. Manjunath v State of Karnataka"></label>
   <label class="c12"><span class="t">VC link<i>optional</i></span><input id="f_vc" type="url" placeholder="https://"></label>
  </div>
@@ -226,7 +226,25 @@ function lookup(store,key,maxAge,url,read){
   const e=store[key]=store[key]||{t:0,busy:false,value:null};
   if(e.busy||Date.now()-e.t<maxAge)return;
   e.busy=true;
-  fetch(url).then(r=>r.json()).then(j=>{e.value=j.ok?read(j):null}).catch(()=>{e.value=null}).finally(()=>{e.busy=false;e.t=Date.now();render()});
+  let ok=false;
+  fetch(url).then(r=>r.json()).then(j=>{
+    const v=j.ok?read(j):null;
+    ok=!!v&&!(v.lists&&!Object.keys(v.lists).length);
+    if(ok)e.value=v;
+  }).catch(()=>{}).finally(()=>{e.busy=false;e.t=ok?Date.now():Date.now()-Math.max(0,maxAge-60000);render()});
+}
+function whyNoCase(m){
+  if(m.done)return null;
+  const row=(snap?.data?.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
+  if(!row||row.status!=='sitting')return 'The case number is filled in once this court is sitting.';
+  const e=aux.cl[hallKey(m)];
+  if(!e||!e.t)return 'Looking up the case number...';
+  const lists=e.value?.lists;
+  if(!lists)return "The cause list could not be read yet. The watcher will retry.";
+  const mine=lists[String(m.list)];
+  if(!mine){const have=Object.keys(lists).join(', ');return `This court's cause list has no list ${m.list}${have?` (it has list ${have})`:''}.`}
+  const n=Object.keys(mine).map(Number);
+  return `Item ${m.item} is not in list ${m.list} of the cause list (items ${Math.min(...n)} to ${Math.max(...n)}).`;
 }
 function wantAux(){
   const board=snap?.data; if(!board)return;
@@ -282,6 +300,14 @@ const ORDER={now:0,passed:1,close:2,far:3,na:4,called:5};
 
 const where=m=>{const multi=new Set(matters.filter(x=>x.bench===m.bench&&x.hall===m.hall).map(x=>String(x.list))).size>1;
   return `Item ${m.item} in Court ${m.hall}`+(multi||String(m.list)!=='1'?`, list ${m.list},`:'')};
+function courtProblem(err,haveBoard){
+  const why=/timed? ?out/i.test(err)?"The court's website is taking too long to respond."
+    :/SSL|certificate|handshake|WRONG_VERSION/i.test(err)?"The court's website is not answering properly right now."
+    :/HTTP Error 5\d\d/i.test(err)?"The court's website has a server problem."
+    :/getaddrinfo|Name or service|nodename|unreachable|refused|reset|offline/i.test(err)?"The watcher cannot reach the court's website. Check your internet connection."
+    :"The court's website could not be read just now.";
+  return `${why} ${haveBoard?'The last board received is shown and the':'The'} watcher will keep trying on its own.`;
+}
 function renderHeader(evals){
   const all=evals.filter(x=>!x.m.done), called=all.filter(x=>x.r.k==='called').length;
   const act=all.filter(x=>x.r.k!=='called').sort((a,b)=>(ORDER[a.r.k]-ORDER[b.r.k])||((a.r.d??1e9)-(b.r.d??1e9)));
@@ -299,9 +325,9 @@ function renderHeader(evals){
   else if(act.length||called){if(act.length)s.append(`${act.length} case${act.length>1?'s':''} to go.`);if(called)s.append(`${act.length?' ':''}${called} already called.`);if(pas)s.append(' ',h('span',{class:'warm'},`${pas} passed over`),'.');if(now)s.append(' ',h('span',{class:'hot'},`${now} on now`));if(close)s.append(now?', ':' ',h('span',{class:'warm'},`${close} within ${cfg.thr} case${cfg.thr>1?'s':''}`));if(now||close)s.append('.')}
   const st=$('status');st.replaceChildren();
   st.append(new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',',''));
-  st.append(snap?.data?.updated?`, board updated ${snap.data.updated.replace(/^\S+\s+/,'')}`:', connecting to the board');
+  st.append(snap?.data?.updated?`, board updated ${snap.data.updated.replace(/^\S+\s+/,'')}`:(snap?.error?', no board yet':', connecting to the board'));
   if(snap?.fetched_at)st.append(`, fetched ${Math.max(0,Math.round(Date.now()/1000-snap.fetched_at))}s ago`);
-  if(snap?.error)st.append('. ',h('span',{class:'e'},'Court site: '+snap.error));
+  if(snap?.error)st.append('. ',h('span',{class:'e'},courtProblem(snap.error,!!snap.data),' ',h('small',{},'Court site: '+snap.error)));
   $('shareBtn').hidden=!matters.length;
 }
 
@@ -339,7 +365,7 @@ function renderMatters(evals){
       const vc=safeUrl(m.vc);
       rows.append(h('div',{class:`mr ${m.done?'done':r.k}`},
         h('div',{class:'it'},String(m.item)),
-        h('div',{class:'nm'},nm(m)||'Case',m.label&&effCase(m)?h('span',{},effCase(m)):null),
+        h('div',{class:'nm'},nm(m)||'No case number yet',(m.label&&effCase(m))?h('span',{},effCase(m)):(effCase(m)?null:(whyNoCase(m)?h('span',{},whyNoCase(m)):null))),
         h('div',{class:'st'},m.done?'Done':r.short,!m.done&&r.sub?h('small',{},r.sub):null),
         h('div',{class:'ac'},
           vc?h('a',{href:vc,target:'_blank',rel:'noopener',style:'text-decoration:none'},h('button',{class:'btn sm vc',type:'button',html:ICON.vc+'Join hearing'})):null,
@@ -394,10 +420,17 @@ function renderBoard(){
       tb.append(h('tr',{class:'ex'},h('td',{colspan:5},h('b',{},`Next in Court ${r.hall}, list ${r.list}: `),en.err?en.err:en.items?(en.items.length?en.items.map(i=>`${i.sl}. ${i.case}`).join('   '):'none'):'loading')))}
   });
   const cols=h('colgroup',{},h('col',{class:'k'}),h('col',{class:'s'}),h('col',{class:'g'}),h('col',{class:'v'}),h('col',{class:'l'}));
-  const heads=[['Court','c'],['List','c'],['Sl. No.','c'],['Case no.',''],['Stage','']];
+  const heads=[['Court','c'],['List','c'],['Sl. No.','c'],['Case No.',''],['Stage','']];
   host.append(h('table',{},cols,h('thead',{},h('tr',{},...heads.map(([x,c])=>h('th',{class:c},x)))),tb));
 }
+function rememberFound(){
+  if(LS.get('hck_day',null)!==dayKey()||$('dlgD').open)return;
+  let changed=false;
+  for(const m of matters)if(!m.case&&!m.found){const c=effCase(m);if(c){m.found=c;changed=true}}
+  if(changed)save();
+}
 function render(){
+  rememberFound();
   wantAux();
   const evals=matters.map(m=>({m,r:evaluate(m,snap?.data)}));
   evals.forEach(({m,r})=>{const prev=last[m.id];if(prev&&prev!==r.k&&(r.k==='now'||r.k==='close')&&!m.done)alertFor(m,r);last[m.id]=r.k});
@@ -478,11 +511,11 @@ function openDay(was){
   $('dText').textContent=`These cases are from ${dayLabel(was)}. A case that was not heard is often listed again with a different list or item number. Update it here and keep it, or remove it.`;
   carry=matters.map(m=>{
     const keep=h('input',{type:'checkbox',checked:!m.done,'aria-label':'Keep this case'});
-    const list=h('input',{type:'number',min:1,value:m.list,'aria-label':'List no.'});
-    const item=h('input',{type:'number',min:1,value:m.item,'aria-label':'Item no.'});
-    const no=effCase(m);
+    const list=h('input',{type:'number',min:1,value:m.list,'aria-label':'List No.'});
+    const item=h('input',{type:'number',min:1,value:m.item,'aria-label':'Item No.'});
+    const no=m.case||m.found||'';
     const row=h('div',{class:'dr'+(m.done?' off':'')},keep,
-      h('div',{class:'who'},h('b',{},m.label||no||'Untitled case'),h('small',{},`${NAME[m.bench]} Court ${m.hall}${m.label&&no?', '+no:''}`)),list,item);
+      h('div',{class:'who'},h('b',{},m.label||no||`Court ${m.hall}, list ${m.list}, item ${m.item}`),h('small',{},`${NAME[m.bench]} Court ${m.hall}${m.label&&no?', '+no:''}`)),list,item);
     keep.onchange=()=>row.classList.toggle('off',!keep.checked);
     return{m,keep,list,item,row};
   });
@@ -501,6 +534,7 @@ $('dform').onsubmit=e=>{e.preventDefault();
     if(!c.keep.checked)continue;
     const list=Math.floor(+c.list.value), item=Math.floor(+c.item.value);
     if(!(list>=1)||!(item>=1)){alert('Enter a list and item number for each case you keep.');return}
+    if(!c.m.case&&c.m.found)c.m.case=c.m.found;
     kept.push(Object.assign(c.m,{list:String(list),item,done:false}));
   }
   finishDay(kept,kept.length?`${kept.length} case${kept.length>1?'s':''} saved for today.`:'Cases cleared.');
