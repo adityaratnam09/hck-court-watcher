@@ -111,7 +111,7 @@ hall, or an item number to see the next few cases.
 | Part | What it is for |
 | --- | --- |
 | **Headline and summary** | The case that needs attention first, and the tally of the rest |
-| **Hall cards** | One card per hall and list, with a ruler, the court's position and your cases |
+| **Hall cards** | One card per court hall, with your cases listed by list and item, a ruler for the list being heard, and the court's position |
 | **List order** | The order in which the court calls the lists of one hall |
 | **Display board** | The court's own board for each bench, with links to its cause list and passed-over cases |
 | **Share** | A message with every case's position, for WhatsApp or copying |
@@ -137,6 +137,11 @@ Some limits matter when reading any status:
   from the cause list's highest item number, so the figure is approximate.
 - **A list that is not in the cause list has no count.** If a list is called after the one
   the court is on and its length is not known, the status says so and gives no number.
+- **An item that is not in the cause list is flagged, not counted.** If the cause list has no
+  such list, or the item number is higher than the list's last item, the case shows "Not
+  listed" with a note, because a distance to a missing item would be meaningless. Check the
+  list and item numbers you entered. The watcher only checks for items past the end of a
+  list, since a missing number inside a list can be a connected case.
 - **The passed-over position is the court's list order.** It shows where the case stands on
   the hall's passed-over list, which covers every list in that hall.
 

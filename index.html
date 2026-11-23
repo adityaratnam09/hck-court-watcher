@@ -12,8 +12,8 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#15191a;--sheet:#1d2224;--ink:#e6e9e3;--soft:#9ba39b;--rule:#353d3b;--wash:#262c2b;--brick:#e8806d;--brickwash:#3b2420;--amber:#e3ac52;--amberwash:#352b18;--green:#74c096;--greenwash:#1a3226;--blue:#a2b6e6}}
 [data-theme=dark]{--paper:#15191a;--sheet:#1d2224;--ink:#e6e9e3;--soft:#9ba39b;--rule:#353d3b;--wash:#262c2b;--brick:#e8806d;--brickwash:#3b2420;--amber:#e3ac52;--amberwash:#352b18;--green:#74c096;--greenwash:#1a3226;--blue:#a2b6e6}
 *{box-sizing:border-box}
-body{margin:0;font:19px/1.55 var(--serif);background:var(--paper);color:var(--ink)}
-main{max-width:1060px;margin:0 auto;padding:28px clamp(20px,4vw,56px) 90px}
+body{zoom:.82;margin:0;font:19px/1.55 var(--serif);background:var(--paper);color:var(--ink)}
+main{max-width:966px;margin:0 auto;padding:28px clamp(20px,4vw,56px) 90px}
 button,input,select{font:inherit;color:var(--ink)}button{cursor:pointer}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 a{color:var(--blue)}
@@ -38,16 +38,16 @@ svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-l
 .dr .who b{display:block;font-size:18px;font-weight:600}.dr .who small{color:var(--soft)}.dr.off .who,.dr.off input[type=number]{opacity:.45}
 @media(max-width:520px){.dr{grid-template-columns:28px 1fr 64px 72px;gap:8px}}
 ::placeholder{font-size:16px}
-h1{font:600 clamp(30px,5.2vw,50px)/1.08 var(--serif);letter-spacing:-.015em;margin:0}
+h1{font:600 clamp(26px,3.8vw,42px)/1.08 var(--serif);letter-spacing:-.015em;margin:0}
 h1 .u{color:var(--brick)}h1 .w{color:var(--amber)}
-.sum{margin-top:16px;color:var(--soft);font-size:19px}.sum .hot{color:var(--brick);font-weight:700}.sum .warm{color:var(--amber);font-weight:700}
+.sum{margin-top:16px;color:var(--soft);font-size:max(12px,min(18px,calc((100vw - 48px)/58)));white-space:nowrap}.sum .hot{color:var(--brick);font-weight:700}.sum .warm{color:var(--amber);font-weight:700}
 .status{margin-top:8px;font-size:15px;color:var(--soft)}.status .e{color:var(--brick)}
 
 .grp{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;margin-bottom:28px;overflow:hidden}
 .gh{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;padding:22px 28px 14px}
 .gh .hall{font:700 30px/1 var(--cond);letter-spacing:.01em}.gh .hall small{font:400 17px var(--serif);color:var(--soft);margin-left:8px;letter-spacing:0}
 .gh .court{color:var(--soft);font-size:16px;text-align:right}.gh .court b{font:700 22px var(--cond);color:var(--ink);margin-right:6px}
-.ruler{position:relative;height:104px;margin:0 44px 2px}
+.ruler{position:relative;height:104px;margin:0 78px 2px 44px}
 .ruler.tall{height:140px}
 .track{position:absolute;left:0;right:0;bottom:36px;height:3px;background:var(--rule);border-radius:2px}
 .seg{position:absolute;bottom:36px;height:3px;border-radius:2px}
@@ -66,10 +66,10 @@ h1 .u{color:var(--brick)}h1 .w{color:var(--amber)}
 .rows{border-top:1px solid var(--rule)}
 .mr{display:grid;grid-template-columns:76px 1fr auto auto;gap:20px;align-items:center;padding:18px 28px;border-top:1px solid var(--rule)}
 .mr:first-child{border-top:0}
-.mr .it{font:700 40px/1 var(--cond);letter-spacing:.005em}
+.mr .it{font:700 40px/1 var(--cond);letter-spacing:.005em;text-align:center}.mr .it small{display:block;font:600 17px var(--serif);color:var(--ink);letter-spacing:0;margin-top:6px}
 .mr .nm{font-weight:600;line-height:1.25}.mr .nm span{display:block;font-weight:400;color:var(--soft);font-size:16px}
 .mr .st{font:700 24px/1 var(--cond);min-width:92px;text-align:right}
-.mr.now .st{color:var(--brick)}.mr.close .st,.mr.passed .st{color:var(--amber)}.mr.called .st{color:var(--soft);font:400 16px var(--serif)}.mr.far .st{color:var(--green)}.mr.na .st,.mr.done .st{color:var(--soft);font:400 16px var(--serif)}
+.mr.now .st{color:var(--brick)}.mr.close .st,.mr.passed .st{color:var(--amber)}.mr.called .st{color:var(--soft);font:400 16px var(--serif)}.mr.far .st{color:var(--green)}.mr.unlisted .st{color:var(--brick);font:700 20px var(--cond)}.mr .nm .bad{color:var(--brick)}.mr.na .st,.mr.done .st{color:var(--soft);font:400 16px var(--serif)}
 .mr.now{background:var(--brickwash)}.mr.done{opacity:.55}.mr.done .nm{text-decoration:line-through}
 .mr .st small{display:block;margin-top:4px;font:400 15px/1.3 var(--serif);color:var(--soft)}
 .mr .ac{display:flex;align-items:center;gap:8px;justify-content:flex-end;min-width:132px}
@@ -86,7 +86,8 @@ h2{font:600 28px/1.1 var(--serif);margin:64px 0 20px;letter-spacing:-.01em}
 .flt{display:flex;gap:32px;flex-wrap:wrap;font-size:17px;margin:20px 0 6px}.flt label{display:inline-flex;gap:7px;align-items:center}
 .flt input{accent-color:var(--ink);width:17px;height:17px}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--sheet);border:1px solid var(--rule);margin-top:14px}
-col.k{width:15%}col.s{width:14%}col.g{width:15%}col.v{width:26%}col.l{width:30%}
+col.k{width:15%}col.s{width:15%}col.g{width:17%}col.v{width:36%}col.l{width:17%}
+th:nth-child(4),td:nth-child(4){padding-left:clamp(14px,5vw,56px)}
 th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
 th{font-size:15px;color:var(--soft);font-weight:400}
 th.c,td.c{text-align:center}
@@ -99,7 +100,7 @@ td a{color:var(--blue)}td button.lnk{background:none;border:0;padding:0 4px;colo
 
 dialog{border:0;border-radius:10px;padding:36px;width:min(560px,94vw);background:var(--sheet);color:var(--ink);box-shadow:0 24px 70px rgba(10,15,30,.45)}
 dialog::backdrop{background:rgba(10,15,30,.5)}
-dialog h3{font:600 32px/1.1 var(--serif);margin:0 0 8px}dialog .hint{color:var(--soft);margin:0 0 28px}
+dialog h3{font:600 32px/1.1 var(--serif);margin:0 0 8px}dialog .hint{color:var(--soft);margin:0 0 28px}dialog .err{color:var(--brick);margin:16px 0 0;font-weight:600}
 .lbl{font-weight:700;margin:28px 0 10px}
 .seg2{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}.seg2 button{border:0;background:none;padding:8px 18px;font-weight:600}.seg2 button.on{background:var(--ink);color:var(--paper)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:end}
@@ -118,7 +119,7 @@ select,input:not([type=checkbox]){width:100%;padding:10px 12px;border-radius:4px
 .about{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);font-size:15px;color:var(--soft)}
 textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:17px/1.6 var(--serif);resize:vertical}
 .note{color:var(--green);min-height:1.6em;margin:12px 0 0;font-size:16px}
-@media(max-width:640px){main{padding:26px 16px 70px}.tabs{gap:24px}.mr{grid-template-columns:54px 1fr auto;gap:14px;padding:16px 18px}.gh{padding:18px 18px 12px}.mr .ac{grid-column:1/-1;justify-content:flex-start}.ruler{margin:8px 28px 2px}.fg{grid-template-columns:repeat(12,1fr)}.c2,.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c12{grid-column:span 12}.two{grid-template-columns:1fr}.gh .court{text-align:left}th,td{padding:10px 8px}}
+@media(max-width:640px){main{padding:26px 16px 70px}.tabs{gap:24px}.mr{grid-template-columns:54px 1fr auto;gap:14px;padding:16px 18px}.gh{padding:18px 18px 12px}.mr .ac{grid-column:1/-1;justify-content:flex-start}.ruler{margin:8px 60px 2px 28px}.fg{grid-template-columns:repeat(12,1fr)}.c2,.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c12{grid-column:span 12}.two{grid-template-columns:1fr}.gh .court{text-align:left}th,td{padding:10px 8px}}
 </style></head><body><main>
 
 <div class="topbar"><div class="brand">High Court of Karnataka Display Board Watcher</div>
@@ -147,6 +148,7 @@ textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5
   <label class="c7"><span class="t">Case name<i>optional</i></span><input id="f_label" placeholder="e.g. Manjunath v State of Karnataka"></label>
   <label class="c12"><span class="t">VC link<i>optional</i></span><input id="f_vc" type="url" placeholder="https://"></label>
  </div>
+ <p class="err" id="mErr" role="alert" hidden></p>
  <div class="foot"><button type="button" class="btn" id="mDel" hidden style="color:var(--brick);border-color:var(--brick)">Delete</button><span style="flex:1"></span><button type="button" class="btn" id="mCancel">Cancel</button>&nbsp;<button class="btn fill" id="mSave">Add case</button></div>
 </form></dialog>
 
@@ -253,11 +255,19 @@ function wantAux(){
     const code=CODE[m.bench], row=(board.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
     const sitting=row&&row.status==='sitting', rel=sitting?relation(m,row):null;
     const query=`bench=${code}&hall=${m.hall}`;
-    if(!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists}));
+    if(sitting||!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists}));
     if(rel==='behind'||(rel==='same'&&m.item<row.sl))lookup(aux.pa,hallKey(m),60000,`/api/passed?${query}`,j=>{const list=j.items.map(normCase);return{list,set:new Set(list)}});
   });
 }
-/* kind: now | passed | close | far | called | na. */
+function missingFromCauseList(m){return missingFromLists(m,aux.cl[hallKey(m)]?.value?.lists)}
+function missingFromLists(m,lists){
+  if(!lists||!Object.keys(lists).length)return null;
+  const mine=lists[String(m.list)];
+  if(!mine)return `List ${m.list} is not in the cause list (it has list ${Object.keys(lists).join(', ')}). Check the list number.`;
+  const top=Math.max(...Object.keys(mine).map(Number));
+  return m.item>top?`Item ${m.item} is not in list ${m.list} of the cause list (items 1 to ${top}). Check the item number.`:null;
+}
+/* kind: now | passed | close | far | called | unlisted | na. */
 function evaluate(m,board){
   const rows=(board?.benches?.[m.bench])||[]; const row=rows.find(r=>String(r.hall)===String(m.hall));
   const base={k:'na',short:'',txt:'',cur:null,row};
@@ -268,6 +278,9 @@ function evaluate(m,board){
   if(!row)return{...base,short:'No data',txt:'No data for this hall'};
   if(row.status==='no_session')return{...base,short:'No session',txt:'No session in this hall'};
   if(row.status==='no_sitting')return{...base,short:'Not sitting',txt:'Not sitting today'};
+
+  const missing=missingFromCauseList(m);
+  if(missing)return{...base,k:'unlisted',short:'Not listed',txt:missing};
 
   const rel=relation(m,row);
   const place={cur:row.sl,row,at:rel==='same'?`item ${row.sl}`:`list ${row.list}, item ${row.sl}`};
@@ -296,7 +309,7 @@ const nm=m=>m.label||effCase(m)||'';
 function alertFor(m,r){const msg=`${nm(m)||'Court '+m.hall} item ${m.item}: ${r.txt}`;
   if(cfg.snd){beep();try{if(Notification.permission==='granted')new Notification('HCK Board',{body:msg})}catch(e){}}
   if(cfg.say&&window.speechSynthesis)speechSynthesis.speak(new SpeechSynthesisUtterance(msg.replace(/\s*\/\s*/g,' of ')))}
-const ORDER={now:0,passed:1,close:2,far:3,na:4,called:5};
+const ORDER={now:0,passed:1,close:2,far:3,na:4,unlisted:4,called:5};
 
 const where=m=>{const multi=new Set(matters.filter(x=>x.bench===m.bench&&x.hall===m.hall).map(x=>String(x.list))).size>1;
   return `Item ${m.item} in Court ${m.hall}`+(multi||String(m.list)!=='1'?`, list ${m.list},`:'')};
@@ -309,11 +322,11 @@ function courtProblem(err,haveBoard){
   return `${why} ${haveBoard?'The last board received is shown and the':'The'} watcher will keep trying on its own.`;
 }
 function renderHeader(evals){
-  const all=evals.filter(x=>!x.m.done), called=all.filter(x=>x.r.k==='called').length;
-  const act=all.filter(x=>x.r.k!=='called').sort((a,b)=>(ORDER[a.r.k]-ORDER[b.r.k])||((a.r.d??1e9)-(b.r.d??1e9)));
+  const all=evals.filter(x=>!x.m.done), called=all.filter(x=>x.r.k==='called').length, unlisted=all.filter(x=>x.r.k==='unlisted').length;
+  const act=all.filter(x=>x.r.k!=='called'&&x.r.k!=='unlisted').sort((a,b)=>(ORDER[a.r.k]-ORDER[b.r.k])||((a.r.d??1e9)-(b.r.d??1e9)));
   const hl=$('headline');hl.replaceChildren();
   if(!matters.length)hl.append('No cases yet.');
-  else if(!act.length)hl.append(called?'All your cases have been called.':'All cases are done for today.');
+  else if(!act.length)hl.append(unlisted?`${unlisted>1?unlisted+' cases are':'A case is'} not in the cause list.`:called?'All your cases have been called.':'All cases are done for today.');
   else{const {m,r}=act[0];
     if(r.k==='now')hl.append(where(m)+' is ',h('span',{class:'u'},'on now'),'.');
     else if(r.k==='close'||r.k==='far'){const n=r.d;hl.append(where(m)+' is ',h('span',{class:r.k==='close'?'w':''},`${n<=10?WORDS[n]:n} case${n>1?'s':''}`),' away.')}
@@ -322,7 +335,19 @@ function renderHeader(evals){
   const now=act.filter(x=>x.r.k==='now').length, close=act.filter(x=>x.r.k==='close').length, pas=act.filter(x=>x.r.k==='passed').length;
   const s=$('sum');s.replaceChildren();
   if(!matters.length)s.append('Add a case and the board will count the items down for you.');
-  else if(act.length||called){if(act.length)s.append(`${act.length} case${act.length>1?'s':''} to go.`);if(called)s.append(`${act.length?' ':''}${called} already called.`);if(pas)s.append(' ',h('span',{class:'warm'},`${pas} passed over`),'.');if(now)s.append(' ',h('span',{class:'hot'},`${now} on now`));if(close)s.append(now?', ':' ',h('span',{class:'warm'},`${close} within ${cfg.thr} case${cfg.thr>1?'s':''}`));if(now||close)s.append('.')}
+  else if(act.length||called||unlisted){
+    if(act.length){
+      s.append(`${act.length} case${act.length>1?'s':''} to go`);
+      const bits=[];
+      if(now)bits.push(['hot',`${now} on now`]);
+      if(close)bits.push(['warm',`${close} within ${cfg.thr} case${cfg.thr>1?'s':''}`]);
+      if(pas)bits.push(['warm',`${pas} passed over`]);
+      bits.forEach(([c,t],k)=>{s.append(k?', ':', ');const[n,...rest]=t.split(' ');s.append(h('span',{class:c},k?t:`${n} of them ${rest.join(' ')}`))});
+      s.append('.');
+    }
+    if(called)s.append(`${act.length?' ':''}${called} already called.`);
+    if(unlisted)s.append(' ',h('span',{class:'hot'},`${unlisted} not in the cause list`),'.');
+  }
   const st=$('status');st.replaceChildren();
   st.append(new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',',''));
   st.append(snap?.data?.updated?`, board updated ${snap.data.updated.replace(/^\S+\s+/,'')}`:(snap?.error?', no board yet':', connecting to the board'));
@@ -352,20 +377,21 @@ function renderMatters(evals){
   const el=$('matters');el.replaceChildren();
   if(!matters.length){el.append(h('div',{class:'empty'},h('p',{},'Enter the bench, court hall and item number from the cause list.'),h('p',{},h('button',{class:'btn fill',onclick:()=>openMatter()},'Add your first case'))));return}
   const groups={};
-  evals.forEach(x=>{const key=`${x.m.bench}|${x.m.hall}|${x.m.list}`;(groups[key]=groups[key]||[]).push(x)});
+  evals.forEach(x=>{const key=`${x.m.bench}|${x.m.hall}`;(groups[key]=groups[key]||[]).push(x)});
   const list=Object.values(groups).map(g=>{const act=g.filter(x=>!x.m.done);const best=act.length?Math.min(...act.map(x=>ORDER[x.r.k]*1000+(x.r.d??999))):1e6;return{g,act,best}}).sort((a,b)=>a.best-b.best);
   list.forEach(({g,act})=>{
     const m0=g[0].m, row=g[0].r.row, sitting=row&&row.status==='sitting';
-    const cur=sitting&&String(row.list)===String(m0.list)?row.sl:null;
-    const head=h('div',{class:'gh'},h('div',{class:'hall'},`Court ${m0.hall}`,h('small',{},`${NAME[m0.bench]}${String(m0.list)!=='1'?', list '+m0.list:''}`),
+    const cur=sitting?row.sl:null;
+    const head=h('div',{class:'gh'},h('div',{class:'hall'},`Court ${m0.hall}`,h('small',{},NAME[m0.bench]),
       h('button',{class:'ordbtn',type:'button',title:'Set the order the court calls the lists',onclick:()=>openOrder(m0)},listOrder(m0).length?`Lists called: ${listOrder(m0).join(', then ')}`:'List order')),
-      h('div',{class:'court'},sitting?[h('b',{},`item ${row.sl}`),`${row.case}, stage ${row.stage}${String(row.list)!==String(m0.list)?', on list '+row.list:''}`]:(g[0].r.txt||'')));
+      h('div',{class:'court'},sitting?[h('b',{},`item ${row.sl}`),`${row.case}, stage ${row.stage}, list ${row.list}`]:(g[0].r.txt||'')));
     const rows=h('div',{class:'rows'});
-    g.sort((a,b)=>(a.m.done-b.m.done)||(a.m.item-b.m.item)).forEach(({m,r})=>{
+    const ord=listOrder(m0),rank=l=>{const i=ord.map(String).indexOf(String(l));return i<0?ord.length+Number(l):i};
+    g.sort((a,b)=>(a.m.done-b.m.done)||(rank(a.m.list)-rank(b.m.list))||(a.m.item-b.m.item)).forEach(({m,r})=>{
       const vc=safeUrl(m.vc);
       rows.append(h('div',{class:`mr ${m.done?'done':r.k}`},
-        h('div',{class:'it'},String(m.item)),
-        h('div',{class:'nm'},nm(m)||'No case number yet',(m.label&&effCase(m))?h('span',{},effCase(m)):(effCase(m)?null:(whyNoCase(m)?h('span',{},whyNoCase(m)):null))),
+        h('div',{class:'it'},String(m.item),h('small',{},`list ${m.list}`)),
+        h('div',{class:'nm'},nm(m)||(r.k==='unlisted'?null:'No case number yet'),r.k==='unlisted'?h('span',{class:'bad'},r.txt):(m.label&&effCase(m))?h('span',{},effCase(m)):(effCase(m)?null:(whyNoCase(m)?h('span',{},whyNoCase(m)):null))),
         h('div',{class:'st'},m.done?'Done':r.short,!m.done&&r.sub?h('small',{},r.sub):null),
         h('div',{class:'ac'},
           vc?h('a',{href:vc,target:'_blank',rel:'noopener',style:'text-decoration:none'},h('button',{class:'btn sm vc',type:'button',html:ICON.vc+'Join hearing'})):null,
@@ -374,7 +400,7 @@ function renderMatters(evals){
           h('button',{class:'ico',title:'Delete',html:ICON.trash,onclick:()=>removeCase(m)}))));
     });
     const grp=h('section',{class:'grp'},head);
-    if(act.length&&cur!=null)grp.append(buildRuler(act,cur));
+    const onList=act.filter(x=>x.r.k!=='unlisted'&&String(x.m.list)===String(row?.list));if(onList.length&&cur!=null)grp.append(buildRuler(onList,cur));
     grp.append(rows);el.append(grp);
   });
 }
@@ -446,13 +472,24 @@ async function poll(){
 function openMatter(m){editId=m?m.id:null;
   $('mTitle').textContent=m?'Edit case':'Add case';$('mSave').textContent=m?'Save changes':'Add case';$('mDel').hidden=!m;
   $('f_bench').value=m?.bench||cfg.bench;$('f_hall').value=m?.hall??'';$('f_list').value=m?.list??'1';$('f_item').value=m?.item??'';$('f_case').value=m?.case||'';$('f_label').value=m?.label||'';$('f_vc').value=m?.vc||'';
-  open($('dlgM'));}
+  $('mErr').hidden=true;open($('dlgM'));}
+$('mform').oninput=()=>{$('mErr').hidden=true};
 $('addBtn').onclick=()=>openMatter();
 $('mCancel').onclick=()=>close($('dlgM'));
-$('mform').onsubmit=e=>{e.preventDefault();
+$('mform').onsubmit=async e=>{e.preventDefault();
   const vc=$('f_vc').value.trim();if(vc&&!safeUrl(vc)){alert('The VC link must start with http:// or https://');return}
   const v={bench:$('f_bench').value,hall:+$('f_hall').value,list:$('f_list').value||'1',item:+$('f_item').value,case:$('f_case').value.trim(),label:$('f_label').value.trim(),vc};
   if(!v.hall||!v.item)return;
+  const row=(snap?.data?.benches?.[v.bench]||[]).find(r=>String(r.hall)===String(v.hall));
+  if(row&&row.status==='sitting'){
+    const key=hallKey(v);let lists=aux.cl[key]?.value?.lists;
+    if(!lists||!Object.keys(lists).length){
+      try{const j=await(await fetch(`/api/causelist?bench=${CODE[v.bench]}&hall=${v.hall}`)).json();
+        if(j.ok&&j.lists&&Object.keys(j.lists).length){lists=j.lists;aux.cl[key]={t:Date.now(),busy:false,value:{lists}}}}catch(_){}
+    }
+    const bad=missingFromLists(v,lists);
+    if(bad){$('mErr').textContent=bad;$('mErr').hidden=false;return}
+  }
   if(editId){Object.assign(matters.find(x=>x.id===editId),v)}else matters.push({id:Date.now()+'',done:false,...v});
   save();close($('dlgM'));render()};
 function toast(msg,label,fn){const t=$('toast');t.replaceChildren(msg,h('button',{onclick:()=>{fn();t.hidden=true}},label));t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>{t.hidden=true},7000)}
