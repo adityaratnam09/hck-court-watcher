@@ -129,6 +129,25 @@ def parse_causelist_date(page):
         return None
 
 
+LIST_FIRST = re.compile(
+    r"LIST\s*NO\.?\s*(\d+)\s+(?:WILL\s+BE|SHALL\s+BE|TO\s+BE|IS\s+TO\s+BE)?\s*CALLED(?:\s+OUT)?\s+(?:FIRST\s+)?BEFORE\s+(?:THE\s+)?LIST\s*NO\.?\s*(\d+)", re.I)
+
+
+def parse_list_order(page):
+    """The order the court calls its lists, when a cause-list note says so ('LIST NO. 2 WILL BE CALLED OUT FIRST BEFORE
+    LIST NO. 1'), as a list of numbers such as [2, 1]. Empty when no note says it."""
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(page)))
+    pairs = {(int(a), int(b)) for a, b in LIST_FIRST.findall(text)}
+    nodes, order = sorted({n for p in pairs for n in p}), []
+    while nodes:
+        free = [n for n in nodes if not any(b == n and a in nodes for a, b in pairs)]
+        if not free:  # notes contradict each other: give up on them
+            return []
+        order.append(free[0])
+        nodes.remove(free[0])
+    return order if pairs else []
+
+
 def parse_case_positions(page):
     """{case_norm: {list, sl, item, connected}} for every case in a hall's cause list, 'connected with' ones included."""
     parts = CL_SPLIT.split(page)
@@ -145,7 +164,8 @@ def parse_case_positions(page):
 def get_causelist(bench, hall):
     """One hall's cause list (what the board's Court link opens): its date, items by list, and where each case sits."""
     page = http(BASE + f"causelist_specific_c.php?bench={bench}&hallno={hall}")
-    return {"date": parse_causelist_date(page), "lists": parse_causelist(page), "cases": parse_case_positions(page)}
+    return {"date": parse_causelist_date(page), "lists": parse_causelist(page), "cases": parse_case_positions(page),
+            "order": parse_list_order(page)}
 
 
 def causelist_cached(bench, hall):
@@ -229,7 +249,7 @@ def make_handler(poller):
                     h = int(q["hall"])
                     if path == "/api/causelist":
                         res = causelist_cached(b, h)
-                        out = {"ok": True, "date": res["date"], "lists": res["lists"]}
+                        out = {"ok": True, "date": res["date"], "lists": res["lists"], "order": res["order"]}
                         body, ctype = json.dumps(out).encode(), "application/json"
                         self.send_response(200)
                         self.send_header("Content-Type", ctype)

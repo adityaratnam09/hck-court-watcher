@@ -53,8 +53,9 @@ from your Python folder in Applications, then start the watcher again.
    new list and item. If it is not in that court's list, it is unticked so that it is
    removed unless you keep it. A case with no saved case number cannot be checked, so
    enter its list and item by hand. Then choose **Save for today**, or choose
-   **Clear all cases** to start clean. Settings are kept either way, and list orders are
-   cleared because they can change from day to day.
+   **Clear all cases** to start clean. Settings are kept either way. List orders you set
+   by hand are cleared because they can change from day to day, and the order is read again
+   from the new cause list.
 5. A cause list counts as today's only when the date printed at the top of it is today's.
    Until the court uploads it, the watcher says so, keeps checking every minute, and saves
    your cases as not yet checked. Each of those cases shows "Not checked against today's
@@ -120,8 +121,8 @@ hall, or an item number to see the next few cases.
 | --- | --- |
 | **Headline and summary** | The case that needs attention first, and the tally of the rest |
 | **Hall cards** | One card per court hall, with your cases listed by list and item, a ruler for the list being heard, and the court's position |
-| **List order** | The order in which the court calls the lists of one hall |
-| **Display board** | The court's own board for each bench, with links to its cause list and passed-over cases |
+| **List order** | The order in which the court calls the lists of one hall, read from the cause list when it says so, or set by you |
+| **Display Board** | The court's own board for each bench, with links to its cause list and passed-over cases. **Sitting only** hides every hall that is not sitting, including your own |
 | **Share** | A message with every case's position, for WhatsApp or copying |
 | **Settings** | Light or dark theme, how close counts as close, how often the board is read, alerts and keeping the screen on |
 
@@ -145,6 +146,9 @@ Some limits matter when reading any status:
   from the cause list's highest item number, so the figure is approximate.
 - **A list that is not in the cause list has no count.** If a list is called after the one
   the court is on and its length is not known, the status says so and gives no number.
+- **List order is an assumption unless the cause list or you state it.** Without a note or
+  a setting, lists are taken to be called in number order, so the distance to a case on a
+  later list can be wrong.
 - **An item that is not in the cause list is flagged, not counted.** If the cause list has no
   such list, or the item number is higher than the list's last item, the case shows "Not
   listed" with a note, because a distance to a missing item would be meaningless. Check the
@@ -183,9 +187,14 @@ For each case, the watcher takes the first of these that applies.
 runs down from it. If the court is on an earlier list, the distance is the cases left there,
 plus any lists in between, plus one.
 
-**The order of the lists.** With nothing set, lists are called in number order. Setting the
-order for a hall, for example `2, 1`, makes list 2 first. Lists you leave out are called
-afterwards, in number order. The setting is stored per hall, in your browser.
+**The order of the lists.** Courts sometimes call a later list first, and say so in a note on
+the cause list, for example "LIST NO. 2 WILL BE CALLED OUT FIRST BEFORE LIST NO. 1". When
+today's cause list carries such a note, the watcher reads the order from it and uses it. You
+can set an order for a hall yourself, for example `2, 1`, and yours is used instead. Lists
+you leave out are called afterwards, in number order. **Use default** clears your order, so
+the cause list's order applies, or number order if the cause list gives none. Your setting is
+stored per hall, in your browser. With no note and no setting, lists are assumed to be
+called in number order and the status text says so.
 
 **How the two lookups are limited.** The passed-over list is read only while the board is
 past one of your cases, at most once a minute. A cause list is read only when a case number

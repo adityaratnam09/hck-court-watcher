@@ -119,7 +119,7 @@ select,input:not([type=checkbox]){width:100%;padding:10px 12px;border-radius:4px
 .fg select,.fg input{height:50px}
 .c5{grid-column:span 5}.c7{grid-column:span 7}
 .c3{grid-column:span 3}.c2{grid-column:span 2}.c4{grid-column:span 4}.c6{grid-column:span 6}.c12{grid-column:span 12}
-.ordbtn{margin-left:14px;padding:2px 12px;border:1px solid var(--rule);border-radius:99px;background:none;font:400 15px var(--serif);color:var(--soft);vertical-align:middle}.ordbtn:hover{color:var(--ink);border-color:var(--ink)}
+.ordbtn::after{content:'\25BE';margin-left:7px;font-size:13px}.ordbtn{margin-left:14px;padding:2px 12px;border:1px solid var(--rule);border-radius:99px;background:none;font:400 15px var(--serif);color:var(--soft);vertical-align:middle}.ordbtn:hover{color:var(--ink);border-color:var(--ink)}
 .blurb{margin:-6px 0 28px;font-size:15px;color:var(--soft)}
 textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:17px/1.6 var(--serif);resize:vertical}
 .note{color:var(--green);min-height:1.6em;margin:12px 0 0;font-size:16px}
@@ -166,10 +166,12 @@ body.mob main{padding:26px 16px 70px}body.mob .tabs{gap:24px}body.mob .mr{grid-t
 
 <dialog id="dlgO"><form method="dialog" id="oform"><h3 id="oTitle">List order</h3>
  <p class="hint" id="oHint"></p>
+ <p class="hint" id="oAuto" style="margin-top:0"></p>
  <label class="lbl" style="display:block;margin-top:0" for="o_val">Lists in the order the court calls them</label>
  <input id="o_val" placeholder="e.g. 2, 1" autocomplete="off">
  <p class="hint" style="margin:12px 0 0;font-size:16px">Lists you leave out are called afterwards, in number order.</p>
- <div class="foot"><button type="button" class="btn" id="oReset">Use number order</button><span style="flex:1"></span><button type="button" class="btn" id="oCancel">Cancel</button>&nbsp;<button class="btn fill">Save</button></div>
+ <p class="hint" style="margin:10px 0 0;font-size:16px"><b>Use default</b> clears your order. The watcher then uses the order stated in today's cause list, if it gives one, and otherwise number order (list 1, then list 2).</p>
+ <div class="foot" style="flex-wrap:nowrap"><button type="button" class="btn" id="oReset">Use default</button><span style="flex:1"></span><button type="button" class="btn" id="oCancel">Cancel</button><button class="btn fill">Save</button></div>
 </form></dialog>
 
 <dialog id="dlgD"><form method="dialog" id="dform"><h3>Cases from an earlier day</h3>
@@ -216,7 +218,11 @@ const clCase=m=>todayCl(m)?.lists?.[String(m.list)]?.[String(m.item)];
 /* The case number to show. Until a case's list and item have been checked today, the number saved earlier is the one to trust:
    the item it had before may now hold a different case. */
 const effCase=m=>m.case||(m.vday===dayKey()&&clCase(m))||m.found||'';
-const listOrder=m=>cfg.orders[hallKey(m)]||[];
+const sameOrder=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
+const manualOrder=m=>{const o=cfg.orders[hallKey(m)]||[];return sameOrder(o,autoOrder(m))?[]:o};
+/* The order a cause-list note gives for today ('LIST NO. 2 WILL BE CALLED OUT FIRST BEFORE LIST NO. 1'). */
+const autoOrder=m=>todayCl(m)?.order||[];
+const listOrder=m=>{const o=manualOrder(m);return o.length?o:autoOrder(m)};
 /* Lists the user has not ordered are called after the ordered ones, by list number. */
 function listRank(list,order){const i=order.indexOf(Number(list));return i>=0?i:order.length+Number(list)}
 const listLength=(lists,list)=>Math.max(0,...Object.keys(lists?.[list]||{}).map(Number));
@@ -269,7 +275,7 @@ function wantAux(){
     const code=CODE[m.bench], row=(board.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
     const sitting=row&&row.status==='sitting', rel=sitting?relation(m,row):null;
     const query=`bench=${code}&hall=${m.hall}`;
-    if(sitting||!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists,date:j.date}));
+    lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists,date:j.date,order:j.order||[]}));
     if(rel==='behind'||(rel==='same'&&m.item<row.sl))lookup(aux.pa,hallKey(m),60000,`/api/passed?${query}`,j=>{const list=j.items.map(normCase);return{list,set:new Set(list)}});
   });
 }
@@ -305,7 +311,8 @@ function evaluate(m,board){
 
   if(rel==='ahead'){
     const d=casesToLaterList(m,row);
-    return d==null?{...base,...place,short:'Not yet',txt:`List ${m.list} is called after list ${row.list}`}:away(d);
+    if(d==null)return{...base,...place,short:'Not yet',txt:`List ${m.list} is called after list ${row.list}`};
+    const r=away(d);return listOrder(m).length?r:{...r,txt:r.txt+', assuming lists are called in number order'};
   }
   const d=rel==='same'?m.item-row.sl:null;
   if(d===0)return{...place,k:'now',short:'On now',txt:'On now',d};
@@ -399,7 +406,7 @@ function renderMatters(evals){
     const m0=g[0].m, row=g[0].r.row, sitting=row&&row.status==='sitting';
     const cur=sitting?row.sl:null;
     const head=h('div',{class:'gh'},h('div',{class:'hall'},`Court ${m0.hall}`,h('small',{},NAME[m0.bench]),
-      h('button',{class:'ordbtn',type:'button',title:'Set the order the court calls the lists',onclick:()=>openOrder(m0)},listOrder(m0).length?`Lists called: ${listOrder(m0).join(', then ')}`:'List order')),
+      h('button',{class:'ordbtn',type:'button',title:manualOrder(m0).length||!autoOrder(m0).length?'Click to set or change the order in which this court calls its lists':'List order was read from a note in today\'s cause list. Click to change it.',onclick:()=>openOrder(m0)},listOrder(m0).length?`Lists called: ${listOrder(m0).join(', then ')}`:'Set list order')),
       h('div',{class:'court'},sitting?[h('b',{},`item ${row.sl}`),`${row.case}, stage ${row.stage}, list ${row.list}`]:(g[0].r.txt||'')));
     const rows=h('div',{class:'rows'});
     const ord=listOrder(m0),rank=l=>{const i=ord.map(String).indexOf(String(l));return i<0?ord.length+Number(l):i};
@@ -514,12 +521,14 @@ function removeCase(m){const i=matters.findIndex(x=>x.id===m.id);if(i<0)return;c
   toast('Case deleted.','Undo',()=>{matters.splice(Math.min(i,matters.length),0,gone);save();render()})}
 $('mDel').onclick=()=>{const m=matters.find(x=>x.id===editId);close($('dlgM'));if(m)removeCase(m)};
 
-let orderKey=null;
-function openOrder(m){orderKey=hallKey(m);
+let orderKey=null, orderM=null;
+function openOrder(m){orderKey=hallKey(m);orderM=m;
   $('oTitle').textContent=`List order, Court ${m.hall}`;
   $('oHint').textContent=`Some courts take up list 2 before list 1. Tell the watcher the order for HCK ${NAME[m.bench]} Court ${m.hall}; it decides how far away each case is.`;
-  $('o_val').value=listOrder(m).join(', ');open($('dlgO'))}
-function saveOrder(order){if(order.length)cfg.orders[orderKey]=order;else delete cfg.orders[orderKey];saveCfg();close($('dlgO'));render()}
+  $('o_val').value=listOrder(m).join(', ');
+  $('oAuto').textContent=autoOrder(m).length?`Today's cause list says: list ${autoOrder(m).join(', then list ')}. ${manualOrder(m).length?'You have set a different order, which is used instead.':'That is the order in use.'}`:'';
+  open($('dlgO'))}
+function saveOrder(order){if(order.length&&orderM&&sameOrder(order,autoOrder(orderM)))order=[];if(order.length)cfg.orders[orderKey]=order;else delete cfg.orders[orderKey];saveCfg();close($('dlgO'));render()}
 $('oform').onsubmit=e=>{e.preventDefault();saveOrder([...new Set(($('o_val').value.match(/\d+/g)||[]).map(Number))])};
 $('oReset').onclick=()=>saveOrder([]);
 $('oCancel').onclick=()=>close($('dlgO'));
