@@ -8,7 +8,7 @@ One background poll of the court's page, shared by all browser tabs (default eve
 Also proxies the board's own 'passed over' and 'next cases' links, only when you click them.
 Standard library only.
 """
-import argparse, html, json, re, threading, time, urllib.parse, urllib.request
+import argparse, datetime, html, json, re, threading, time, urllib.parse, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -115,10 +115,55 @@ def parse_causelist(page):
     return out
 
 
+CL_DATE = re.compile(r"THE\s+(\d{1,2})(?:ST|ND|RD|TH)?\s+DAY\s+OF\s+([A-Z]+)\s+(\d{4})", re.I)
+
+
+def parse_causelist_date(page):
+    """The date printed at the top of a cause list ('ON Tuesday THE 24th Day Of November 2026'), as YYYY-MM-DD."""
+    m = CL_DATE.search(page)
+    if not m:
+        return None
+    try:
+        return datetime.datetime.strptime(f"{m.group(1)} {m.group(2).title()} {m.group(3)}", "%d %B %Y").date().isoformat()
+    except ValueError:
+        return None
+
+
+def parse_case_positions(page):
+    """{case_norm: {list, sl, item, connected}} for every case in a hall's cause list, 'connected with' ones included."""
+    parts = CL_SPLIT.split(page)
+    out = {}
+    for i in range(1, len(parts) - 1, 2):
+        for sl, case in CL_ROW.findall(parts[i + 1]):
+            sl = html.unescape(sl).replace("\xa0", "").strip()
+            if re.fullmatch(r"\d+(?:\.\d+)*", sl):
+                out.setdefault(norm_case(html.unescape(case)),
+                               {"list": parts[i], "sl": sl, "item": int(sl.split(".")[0]), "connected": "." in sl})
+    return out
+
+
 def get_causelist(bench, hall):
-    """Item number to case number for a hall (what the board's Court link opens)."""
+    """One hall's cause list (what the board's Court link opens): its date, items by list, and where each case sits."""
     page = http(BASE + f"causelist_specific_c.php?bench={bench}&hallno={hall}")
-    return parse_causelist(page)
+    return {"date": parse_causelist_date(page), "lists": parse_causelist(page), "cases": parse_case_positions(page)}
+
+
+def causelist_cached(bench, hall):
+    """A hall's cause list, kept for 15 minutes. An empty page, or one dated before today, is not kept so it is re-read soon."""
+    key = ("c", bench, hall)
+    res = cached(key, 900, lambda: get_causelist(bench, hall))
+    if not res["lists"] or (res["date"] and res["date"] != datetime.date.today().isoformat()):
+        _cache.pop(key, None)
+    return res
+
+
+def find_cases(bench, wanted, hall):
+    """Look for each wanted case in one hall's cause list, and say whether today's list is out yet."""
+    today = datetime.date.today().isoformat()
+    cl = causelist_cached(bench, hall)
+    published = bool(cl["lists"]) and (not cl["date"] or cl["date"] == today)
+    found = {c: {"hall": hall, **cl["cases"][c]} for c in wanted if published and c in cl["cases"]}
+    return {"published": published, "date": cl["date"], "results": {c: found.get(c) for c in wanted}}
 
 
 class Poller:
@@ -168,16 +213,23 @@ def make_handler(poller):
                 if q.get("interval", "").isdigit():
                     poller.set_interval(q["interval"])
                 body, ctype = json.dumps(poller.snapshot()).encode(), "application/json"
+            elif path == "/api/findcases":
+                try:
+                    b = q.get("bench", "")
+                    assert b in ("B", "D", "K")
+                    wanted = [norm_case(c) for c in q.get("cases", "").split("|") if c.strip()][:20]
+                    out = {"ok": True, **find_cases(b, wanted, int(q["hall"]))}
+                except Exception as e:
+                    out = {"ok": False, "error": f"{type(e).__name__}: {e}"}
+                body, ctype = json.dumps(out).encode(), "application/json"
             elif path in ("/api/passed", "/api/next", "/api/causelist"):
                 try:
                     b = q.get("bench", "")
                     assert b in ("B", "D", "K")
                     h = int(q["hall"])
                     if path == "/api/causelist":
-                        res = cached(("c", b, h), 900, lambda: get_causelist(b, h))
-                        if not res:  # an empty page is not worth remembering
-                            _cache.pop(("c", b, h), None)
-                        out = {"ok": True, "lists": res}
+                        res = causelist_cached(b, h)
+                        out = {"ok": True, "date": res["date"], "lists": res["lists"]}
                         body, ctype = json.dumps(out).encode(), "application/json"
                         self.send_response(200)
                         self.send_header("Content-Type", ctype)

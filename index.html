@@ -33,10 +33,14 @@ svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-l
 #dlgS{width:min(680px,94vw)}
 #dlgM{width:min(620px,94vw)}
 #dlgD{width:min(700px,94vw)}
-.dr{display:grid;grid-template-columns:28px 1fr 84px 96px;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
+.dr{display:grid;grid-template-columns:44px 1fr 84px 96px;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
 .dr.dh{border-top:0;padding:4px 0;color:var(--soft);font-size:15px}
 .dr .who b{display:block;font-size:18px;font-weight:600}.dr .who small{color:var(--soft)}.dr.off .who,.dr.off input[type=number]{opacity:.45}
-@media(max-width:520px){.dr{grid-template-columns:28px 1fr 64px 72px;gap:8px}}
+.dw{border-top:1px solid var(--rule)}.dw .dr{border-top:0;padding-bottom:4px}.dn{padding:0 0 12px 56px;font-size:15px;color:var(--soft)}
+.dn.ok{color:var(--green)}.dn.bad{color:var(--brick)}.dn.warn{color:var(--amber)}.dap{display:flex;gap:8px;align-items:center;margin-top:6px;color:var(--ink);cursor:pointer}
+.unv{display:block;background:none;border:0;padding:0;margin-top:4px;font:inherit;font-size:15px;color:var(--amber);text-decoration:underline;cursor:pointer;text-align:left}
+#dBan{margin:0 0 14px;font-weight:600}#dBan.ok{color:var(--green)}#dBan.warn{color:var(--amber)}
+@media(max-width:520px){.dr{grid-template-columns:40px 1fr 64px 72px;gap:8px}.dn{padding-left:0}}
 ::placeholder{font-size:16px}
 h1{font:600 clamp(26px,3.8vw,42px)/1.08 var(--serif);letter-spacing:-.015em;margin:0}
 h1 .u{color:var(--brick)}h1 .w{color:var(--amber)}
@@ -75,7 +79,7 @@ h1 .u{color:var(--brick)}h1 .w{color:var(--amber)}
 .mr .ac{display:flex;align-items:center;gap:8px;justify-content:flex-end;min-width:132px}
 
 .empty{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:30px 26px}
-.empty p{margin:0 0 18px;max-width:46ch;color:var(--soft)}.empty p:last-child{margin:0}
+.empty p{margin:0 0 18px;color:var(--soft)}.empty p:last-child{margin:0}
 
 h2{font:600 28px/1.1 var(--serif);margin:64px 0 20px;letter-spacing:-.01em}
 .bh{display:flex;align-items:baseline;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;margin:64px 0 20px}.bh h2{margin:0}
@@ -96,7 +100,7 @@ tr.mine td{background:var(--amberwash)}tr.idle td{color:var(--soft)}tr.ex td{bac
 td a,td button.lnk{font:700 24px/1 var(--cond)}
 td a{color:var(--blue)}td button.lnk{background:none;border:0;padding:0 4px;color:var(--blue);text-decoration:underline;text-underline-offset:4px}
 .star{color:var(--amber)}
-.fine{font-size:15px;color:var(--soft);margin-top:36px}
+.fine{font-size:15px;color:var(--soft);margin-top:36px}.bn{margin:-8px 0 24px}
 
 dialog{border:0;border-radius:10px;padding:36px;width:min(560px,94vw);background:var(--sheet);color:var(--ink);box-shadow:0 24px 70px rgba(10,15,30,.45)}
 dialog::backdrop{background:rgba(10,15,30,.5)}
@@ -116,7 +120,7 @@ select,input:not([type=checkbox]){width:100%;padding:10px 12px;border-radius:4px
 .c5{grid-column:span 5}.c7{grid-column:span 7}
 .c3{grid-column:span 3}.c2{grid-column:span 2}.c4{grid-column:span 4}.c6{grid-column:span 6}.c12{grid-column:span 12}
 .ordbtn{margin-left:14px;padding:2px 12px;border:1px solid var(--rule);border-radius:99px;background:none;font:400 15px var(--serif);color:var(--soft);vertical-align:middle}.ordbtn:hover{color:var(--ink);border-color:var(--ink)}
-.about{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule);font-size:15px;color:var(--soft)}
+.blurb{margin:-6px 0 28px;font-size:15px;color:var(--soft)}
 textarea{display:block;width:100%;padding:14px 16px;border-radius:8px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:17px/1.6 var(--serif);resize:vertical}
 .note{color:var(--green);min-height:1.6em;margin:12px 0 0;font-size:16px}
 @media(max-width:640px){.sum{white-space:normal;font-size:15px}main{padding:26px 16px 70px}.tabs{gap:24px}.mr{grid-template-columns:54px 1fr auto;gap:14px;padding:16px 18px}.gh{padding:18px 18px 12px}.mr .ac{grid-column:1/-1;justify-content:flex-start}.ruler{margin:8px 60px 2px 44px}.fg{grid-template-columns:repeat(12,1fr)}.c2,.c3,.c4{grid-column:span 6}.c5,.c6,.c7,.c12{grid-column:span 12}.two{grid-template-columns:1fr}.gh .court{text-align:left}th,td{padding:10px 8px}}
@@ -125,6 +129,7 @@ body.mob main{padding:26px 16px 70px}body.mob .tabs{gap:24px}body.mob .mr{grid-t
 
 <div class="topbar"><div class="brand">High Court of Karnataka Display Board Watcher</div>
  <div class="tools"><button class="ico big" id="themeBtn" title="Switch between light and dark" aria-label="Switch between light and dark"></button><button class="ico big" id="mobBtn" title="Preview the phone layout" aria-label="Switch between phone and full layout" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg></button><button class="ico big" id="setBtn" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div></div>
+<p class="blurb">A personal watcher for the display board of the High Court of Karnataka (Bengaluru, Dharwad and Kalaburagi). It runs on your own computer and reads the court's public board no faster than every 30 seconds.</p>
 <header class="mast">
  <div><h1 id="headline"></h1><div class="sum" id="sum"></div><div class="status" id="status"></div></div>
  <div class="cta"><button class="btn" id="shareBtn">Share</button><button class="btn fill" id="addBtn">Add case</button></div>
@@ -133,11 +138,11 @@ body.mob main{padding:26px 16px 70px}body.mob .tabs{gap:24px}body.mob .mr{grid-t
 <div id="matters"></div>
 <div id="toast" class="toast" hidden role="status"></div>
 
-<div class="bh"><h2>Display board</h2><a class="ext" href="https://judiciary.karnataka.gov.in/display_board_bench.php" target="_blank" rel="noopener">Open the court's display board</a></div>
+<div class="bh"><h2>Display Board</h2><a class="ext" href="https://judiciary.karnataka.gov.in/display_board_bench.php" target="_blank" rel="noopener">Open the court's display board</a></div>
+<p class="fine bn">The board can lag the courtroom and items are not always called in order, so always confirm in court. Hall numbers open the court's cause list, List shows passed-over cases, and Sl. No. shows the next cases. Passed-over and next cases are fetched only when you click them.</p>
 <div class="tabs" id="tabs"></div>
 <div class="flt"><label><input type="checkbox" id="o_mine"> Only my courts</label><label><input type="checkbox" id="o_sit"> Sitting only</label></div>
 <div id="board"></div>
-<p class="fine">The board can lag the courtroom, and items are not always called in order, so passed-over items return later. Distances are a guide. Confirm in court. Hall numbers open the court's cause list, List shows passed-over cases, and Sl. No. shows the next cases.</p>
 
 <dialog id="dlgM"><form method="dialog" id="mform"><h3 id="mTitle">Add case</h3><p class="hint">Take the hall and item number from the day's cause list.</p>
  <div class="fg">
@@ -169,8 +174,9 @@ body.mob main{padding:26px 16px 70px}body.mob .tabs{gap:24px}body.mob .mr{grid-t
 
 <dialog id="dlgD"><form method="dialog" id="dform"><h3>Cases from an earlier day</h3>
  <p class="hint" id="dText"></p>
+ <p id="dBan" role="status"></p>
  <div id="dRows"></div>
- <div class="foot"><button type="button" class="btn" id="dClear" style="color:var(--brick);border-color:var(--brick)">Clear all cases</button><span style="flex:1"></span><button class="btn fill" id="dSave">Save for today</button></div>
+ <div class="foot"><button type="button" class="btn" id="dClear" style="color:var(--brick);border-color:var(--brick)">Clear all cases</button><span style="flex:1"></span><button type="button" class="btn" id="dLater" hidden>Not now</button><button class="btn fill" id="dSave">Save for today</button></div>
 </form></dialog>
 
 <dialog id="dlgG"><h3>Settings</h3><p class="hint">Saved in this browser only.</p>
@@ -184,7 +190,6 @@ body.mob main{padding:26px 16px 70px}body.mob .tabs{gap:24px}body.mob .mr{grid-t
  <div class="lbl">Screen</div>
  <label class="row"><input type="checkbox" class="sw" id="g_wake"> Stop the screen sleeping while this page is open</label>
  <div class="foot"><button class="btn" id="g_clr">Remove all cases</button><button class="btn fill" id="gDone">Done</button></div>
- <div class="about"><b>About.</b> A personal watcher for the display board of the High Court of Karnataka (Bengaluru, Dharwad and Kalaburagi). It runs on your own computer and reads the court's public board no faster than every 30 seconds. Passed-over and next cases are fetched only when you click them. The board can lag the courtroom, so always confirm in court.</div>
 </dialog>
 
 <script>
@@ -203,8 +208,14 @@ const open=d=>{try{d.showModal()}catch(e){d.setAttribute('open','')}}, close=d=>
 const WORDS=['no','one','two','three','four','five','six','seven','eight','nine','ten'];
 
 const aux={cl:{},pa:{}};
-const effCase=m=>m.case||(aux.cl[m.bench+'|'+m.hall]?.value?.lists?.[String(m.list)]?.[String(m.item)])||'';
 const hallKey=m=>m.bench+'|'+m.hall;
+/* A cause list is only used once its own date (printed at the top of the list) is today's. Yesterday's list is still what the court
+   site shows until the new one is uploaded, and its item numbers do not carry over. */
+const todayCl=m=>{const e=aux.cl[hallKey(m)];return e?.value&&(!e.value.date||e.value.date===dayKey())?e.value:null};
+const clCase=m=>todayCl(m)?.lists?.[String(m.list)]?.[String(m.item)];
+/* The case number to show. Until a case's list and item have been checked today, the number saved earlier is the one to trust:
+   the item it had before may now hold a different case. */
+const effCase=m=>m.case||(m.vday===dayKey()&&clCase(m))||m.found||'';
 const listOrder=m=>cfg.orders[hallKey(m)]||[];
 /* Lists the user has not ordered are called after the ordered ones, by list number. */
 function listRank(list,order){const i=order.indexOf(Number(list));return i>=0?i:order.length+Number(list)}
@@ -218,7 +229,7 @@ function relation(m,row){
 }
 /* Cases left in the board's list, plus every list between, plus your item. Needs the cause list. */
 function casesToLaterList(m,row){
-  const lists=aux.cl[hallKey(m)]?.value?.lists;
+  const lists=todayCl(m)?.lists;
   if(!lists||!lists[row.list]||!lists[m.list])return null;
   const order=listOrder(m), from=listRank(row.list,order), to=listRank(m.list,order);
   let n=listLength(lists,row.list)-row.sl;
@@ -227,6 +238,7 @@ function casesToLaterList(m,row){
 }
 function lookup(store,key,maxAge,url,read){
   const e=store[key]=store[key]||{t:0,busy:false,value:null};
+  if(e.value?.date&&e.value.date!==dayKey())maxAge=Math.min(maxAge,300000);  // an old list: look again soon
   if(e.busy||Date.now()-e.t<maxAge)return;
   e.busy=true;
   let ok=false;
@@ -237,10 +249,11 @@ function lookup(store,key,maxAge,url,read){
   }).catch(()=>{}).finally(()=>{e.busy=false;e.t=ok?Date.now():Date.now()-Math.max(0,maxAge-60000);render()});
 }
 function whyNoCase(m){
-  if(m.done)return null;
+  if(m.done||m.vday!==dayKey())return null;  // an unchecked case already says so
   const row=(snap?.data?.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
-  if(!row||row.status!=='sitting')return 'The case number is filled in once this court is sitting.';
-  const e=aux.cl[hallKey(m)];
+  const sitting=row&&row.status==='sitting', e=aux.cl[hallKey(m)];
+  if(e?.value&&!todayCl(m))return "Today's cause list is not out yet.";
+  if(!sitting)return todayCl(m)?null:'The case number is filled in once this court is sitting.';
   if(!e||!e.t)return 'Looking up the case number...';
   const lists=e.value?.lists;
   if(!lists)return "The cause list could not be read yet. The watcher will retry.";
@@ -256,11 +269,11 @@ function wantAux(){
     const code=CODE[m.bench], row=(board.benches?.[m.bench]||[]).find(r=>String(r.hall)===String(m.hall));
     const sitting=row&&row.status==='sitting', rel=sitting?relation(m,row):null;
     const query=`bench=${code}&hall=${m.hall}`;
-    if(sitting||!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists}));
+    if(sitting||!m.case||rel==='ahead')lookup(aux.cl,hallKey(m),1800000,`/api/causelist?${query}`,j=>({lists:j.lists,date:j.date}));
     if(rel==='behind'||(rel==='same'&&m.item<row.sl))lookup(aux.pa,hallKey(m),60000,`/api/passed?${query}`,j=>{const list=j.items.map(normCase);return{list,set:new Set(list)}});
   });
 }
-function missingFromCauseList(m){return missingFromLists(m,aux.cl[hallKey(m)]?.value?.lists)}
+function missingFromCauseList(m){return missingFromLists(m,todayCl(m)?.lists)}
 function missingFromLists(m,lists){
   if(!lists||!Object.keys(lists).length)return null;
   const mine=lists[String(m.list)];
@@ -282,6 +295,8 @@ function evaluate(m,board){
 
   const missing=missingFromCauseList(m);
   if(missing)return{...base,k:'unlisted',short:'Not listed',txt:missing};
+  const there=clCase(m), mine=m.case||m.found;
+  if(mine&&there&&normCase(there)!==normCase(mine))return{...base,k:'unlisted',short:'Check item',txt:`Today's cause list has ${there} at item ${m.item} of list ${m.list}, not ${mine}. The item number has probably changed.`};
 
   const rel=relation(m,row);
   const place={cur:row.sl,row,at:rel==='same'?`item ${row.sl}`:`list ${row.list}, item ${row.sl}`};
@@ -327,7 +342,7 @@ function renderHeader(evals){
   const act=all.filter(x=>x.r.k!=='called'&&x.r.k!=='unlisted').sort((a,b)=>(ORDER[a.r.k]-ORDER[b.r.k])||((a.r.d??1e9)-(b.r.d??1e9)));
   const hl=$('headline');hl.replaceChildren();
   if(!matters.length)hl.append('No cases yet.');
-  else if(!act.length)hl.append(unlisted?`${unlisted>1?unlisted+' cases are':'A case is'} not in the cause list.`:called?'All your cases have been called.':'All cases are done for today.');
+  else if(!act.length)hl.append(unlisted?`${unlisted>1?unlisted+' cases need':'A case needs'} checking against the cause list.`:called?'All your cases have been called.':'All cases are done for today.');
   else{const {m,r}=act[0];
     if(r.k==='now')hl.append(where(m)+' is ',h('span',{class:'u'},'on now'),'.');
     else if(r.k==='close'||r.k==='far'){const n=r.d;hl.append(where(m)+' is ',h('span',{class:r.k==='close'?'w':''},`${n<=10?WORDS[n]:n} case${n>1?'s':''}`),' away.')}
@@ -347,7 +362,7 @@ function renderHeader(evals){
       s.append('.');
     }
     if(called)s.append(`${act.length?' ':''}${called} already called.`);
-    if(unlisted)s.append(' ',h('span',{class:'hot'},`${unlisted} not in the cause list`),'.');
+    if(unlisted)s.append(' ',h('span',{class:'hot'},`${unlisted} to check against the cause list`),'.');
   }
   const st=$('status');st.replaceChildren();
   st.append(new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',',''));
@@ -392,7 +407,8 @@ function renderMatters(evals){
       const vc=safeUrl(m.vc);
       rows.append(h('div',{class:`mr ${m.done?'done':r.k}`},
         h('div',{class:'it'},String(m.item),h('small',{},`list ${m.list}`)),
-        h('div',{class:'nm'},nm(m)||(r.k==='unlisted'?null:'No case number yet'),r.k==='unlisted'?h('span',{class:'bad'},r.txt):(m.label&&effCase(m))?h('span',{},effCase(m)):(effCase(m)?null:(whyNoCase(m)?h('span',{},whyNoCase(m)):null))),
+        h('div',{class:'nm'},nm(m)||(r.k==='unlisted'?null:'No case number yet'),r.k==='unlisted'?h('span',{class:'bad'},r.txt):(m.label&&effCase(m))?h('span',{},effCase(m)):(effCase(m)?null:(whyNoCase(m)?h('span',{},whyNoCase(m)):null)),
+          !m.done&&m.vday!==dayKey()?h('button',{class:'unv',type:'button',onclick:()=>openDay(null)},"Not checked against today's cause list. Check all now"):null),
         h('div',{class:'st'},m.done?'Done':r.short,!m.done&&r.sub?h('small',{},r.sub):null),
         h('div',{class:'ac'},
           vc?h('a',{href:vc,target:'_blank',rel:'noopener',style:'text-decoration:none'},h('button',{class:'btn sm vc',type:'button',html:ICON.vc+'Join hearing'})):null,
@@ -426,10 +442,10 @@ function renderBoard(){
   const b=cfg.bench, code=CODE[b], rows=(snap?.data?.benches?.[b])||[];
   $('tabs').replaceChildren(...Object.keys(NAME).map(k=>h('button',{class:cfg.bench===k?'on':'',onclick:()=>{cfg.bench=k;saveCfg();render()}},NAME[k])));
   const mineHalls=new Set(matters.filter(m=>m.bench===b&&!m.done).map(m=>String(m.hall)));
-  const shown=rows.filter(r=>(!cfg.mine||mineHalls.has(String(r.hall)))&&(!cfg.sit||r.status==='sitting'||mineHalls.has(String(r.hall))));
+  const shown=rows.filter(r=>(!cfg.mine||mineHalls.has(String(r.hall)))&&(!cfg.sit||r.status==='sitting'));
   const host=$('board');host.replaceChildren();
   if(!snap?.data){host.append(h('div',{class:'empty'},h('p',{},'Waiting for the board.')));return}
-  if(!shown.length){host.append(h('div',{class:'empty'},h('p',{},cfg.mine&&!mineHalls.size?'You have no cases on this bench.':'No halls match. Courts may not be sitting yet.')));return}
+  if(!shown.length){host.append(h('div',{class:'empty'},h('p',{},cfg.mine&&!mineHalls.size?'You have no cases on this bench.':cfg.sit?'No court is sitting right now. Untick ‘Sitting only’ to see all halls.':'No halls match.')));return}
   const tb=h('tbody');
   shown.forEach(r=>{
     const mine=mineHalls.has(String(r.hall)), sitting=r.status==='sitting';
@@ -453,7 +469,7 @@ function renderBoard(){
 function rememberFound(){
   if(LS.get('hck_day',null)!==dayKey()||$('dlgD').open)return;
   let changed=false;
-  for(const m of matters)if(!m.case&&!m.found){const c=effCase(m);if(c){m.found=c;changed=true}}
+  for(const m of matters)if(!m.case&&m.vday===dayKey()){const c=clCase(m);if(c&&c!==m.found){m.found=c;changed=true}}
   if(changed)save();
 }
 function render(){
@@ -483,15 +499,15 @@ $('mform').onsubmit=async e=>{e.preventDefault();
   if(!v.hall||!v.item)return;
   const row=(snap?.data?.benches?.[v.bench]||[]).find(r=>String(r.hall)===String(v.hall));
   if(row&&row.status==='sitting'){
-    const key=hallKey(v);let lists=aux.cl[key]?.value?.lists;
+    const key=hallKey(v);let lists=todayCl(v)?.lists;
     if(!lists||!Object.keys(lists).length){
       try{const j=await(await fetch(`/api/causelist?bench=${CODE[v.bench]}&hall=${v.hall}`)).json();
-        if(j.ok&&j.lists&&Object.keys(j.lists).length){lists=j.lists;aux.cl[key]={t:Date.now(),busy:false,value:{lists}}}}catch(_){}
+        if(j.ok&&j.lists&&Object.keys(j.lists).length&&(!j.date||j.date===dayKey())){lists=j.lists;aux.cl[key]={t:Date.now(),busy:false,value:{lists,date:j.date}}}}catch(_){}
     }
     const bad=missingFromLists(v,lists);
     if(bad){$('mErr').textContent=bad;$('mErr').hidden=false;return}
   }
-  if(editId){Object.assign(matters.find(x=>x.id===editId),v)}else matters.push({id:Date.now()+'',done:false,...v});
+  if(editId){Object.assign(matters.find(x=>x.id===editId),v,{vday:dayKey()})}else matters.push({id:Date.now()+'',done:false,vday:dayKey(),...v});
   save();close($('dlgM'));render()};
 function toast(msg,label,fn){const t=$('toast');t.replaceChildren(msg,h('button',{onclick:()=>{fn();t.hidden=true}},label));t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>{t.hidden=true},7000)}
 function removeCase(m){const i=matters.findIndex(x=>x.id===m.id);if(i<0)return;const [gone]=matters.splice(i,1);save();render();
@@ -540,48 +556,126 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 
 const dayKey=()=>new Date().toLocaleDateString('en-CA');
 const dayLabel=k=>new Date(k+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(',','');
-let carry=[];
 function checkNewDay(){
   const today=dayKey(), was=LS.get('hck_day',null);
   if(was===today)return;
   if(!was||!matters.length){LS.set('hck_day',today);return}
   if(!$('dlgD').open)openDay(was);
 }
+let carry=[], carryMode='day', carryDate=null, verifying=false;
+const WAITING=['check','wait','error'];
+/* was = the earlier day being carried over. null = re-check only the cases that were saved without being checked. */
 function openDay(was){
-  $('dText').textContent=`These cases are from ${dayLabel(was)}. A case that was not heard is often listed again with a different list or item number. Update it here and keep it, or remove it.`;
-  carry=matters.map(m=>{
+  const list=was?matters:matters.filter(m=>!m.done&&m.vday!==dayKey());
+  if(!list.length)return;
+  carryMode=was?'day':'recheck';carryDate=null;
+  $('dText').textContent=was
+    ?`These cases are from ${dayLabel(was)}. A case that was not heard is often listed again with a different list or item number, Each one is checked against today's cause list.`
+    :"Every case that has not been checked against today's cause list is listed here, not only the one you clicked. The court can change a case's list or item from day to day.";
+  $('dClear').hidden=!was;$('dLater').hidden=!!was;
+  carry=list.map(m=>{
     const keep=h('input',{type:'checkbox',checked:!m.done,'aria-label':'Keep this case'});
-    const list=h('input',{type:'number',min:1,value:m.list,'aria-label':'List No.'});
+    const lst=h('input',{type:'number',min:1,value:m.list,'aria-label':'List No.'});
     const item=h('input',{type:'number',min:1,value:m.item,'aria-label':'Item No.'});
     const no=m.case||m.found||'';
     const row=h('div',{class:'dr'+(m.done?' off':'')},keep,
-      h('div',{class:'who'},h('b',{},m.label||no||`Court ${m.hall}, list ${m.list}, item ${m.item}`),h('small',{},`${NAME[m.bench]} Court ${m.hall}${m.label&&no?', '+no:''}`)),list,item);
+      h('div',{class:'who'},h('b',{},m.label||no||`Court ${m.hall}, list ${m.list}, item ${m.item}`),h('small',{},`${NAME[m.bench]} Court ${m.hall}${m.label&&no?', '+no:''}`)),lst,item);
+    const apply=h('input',{type:'checkbox',checked:true,'aria-label':"Use today's position"});
+    const c={m,keep,list:lst,item,row,apply,note:h('div',{class:'dn'}),applyRow:h('label',{class:'dap'},apply,h('span',{})),
+             hall:m.hall,old:{list:String(m.list),item:m.item,hall:m.hall},no:normCase(no),st:m.done?'done':'check',res:null,asked:false};
     keep.onchange=()=>row.classList.toggle('off',!keep.checked);
-    return{m,keep,list,item,row};
+    apply.onchange=()=>applyPos(c);
+    return c;
   });
-  $('dRows').replaceChildren(h('div',{class:'dr dh'},h('span'),h('span',{},'Case'),h('span',{},'List'),h('span',{},'Item')),...carry.map(c=>c.row));
-  open($('dlgD'));
+  $('dRows').replaceChildren(h('div',{class:'dr dh'},h('span',{},'Keep'),h('span',{},'Case'),h('span',{},'List'),h('span',{},'Item')),...carry.map(c=>h('div',{class:'dw'},c.row,c.note)));
+  paintAll();open($('dlgD'));verifyCarry();
+}
+function applyPos(c){
+  const r=c.res;if(!r)return;
+  if(c.apply.checked){c.list.value=r.list;c.item.value=r.item;c.hall=r.hall}
+  else{c.list.value=c.old.list;c.item.value=c.old.item;c.hall=c.old.hall}
+}
+function paint(c){
+  const n=c.note,r=c.res,m=c.m;n.className='dn';n.replaceChildren();
+  const say=(cls,t)=>{if(cls)n.classList.add(cls);n.append(t)};
+  const where=`Court ${r?.hall}, list ${r?.list}, item ${r?.sl}`;
+  switch(c.st){
+    case 'check':say('',"Checking today's cause list...");break;
+    case 'nocase':say('warn',"No case number is saved for this case, so it cannot be checked. Enter today's list and item by hand.");break;
+    case 'wait':say('warn',"Today's cause list is not out yet. The list and item shown are from an earlier day and will probably change.");break;
+    case 'error':say('warn',"Could not read the court's cause list just now. It will try again.");break;
+    case 'missing':say('bad',`Not in today's cause list for Court ${m.hall}. Untick ‘Keep’ to remove it, or tick it to keep the case if you expect it to be listed later.`);break;
+    case 'same':say('ok',`Found in today's cause list: ${where}. Nothing to change.`);break;
+    case 'found':say('ok',`Found in today's cause list: ${where}${r.connected?` (connected with item ${r.item})`:''}.`);
+      c.applyRow.lastChild.textContent=`Update to Court ${r.hall}, list ${r.list}, item ${r.item}`;n.append(c.applyRow);break;
+  }
+}
+function paintAll(){
+  carry.forEach(paint);
+  const live=carry.filter(c=>!['done','nocase'].includes(c.st)), ban=$('dBan');
+  if(!live.length){ban.textContent='';ban.className=''}
+  else if(live.some(c=>c.st==='check')){ban.textContent="Checking today's cause list...";ban.className=''}
+  else if(live.some(c=>c.st==='wait')){ban.textContent="Today's cause list is not out yet. Item numbers from an earlier day will probably change. This checks again every minute.";ban.className='warn'}
+  else if(live.some(c=>c.st==='error')){ban.textContent="The court's cause list could not be read. This tries again every minute.";ban.className='warn'}
+  else{ban.textContent=`Checked against today's cause list${carryDate?` (dated ${dayLabel(carryDate)})`:''}.`;ban.className='ok'}
+  $('dSave').textContent=carry.some(c=>c.keep.checked&&(WAITING.includes(c.st)||c.st==='nocase'))?'Save for now':'Save for today';
+}
+async function verifyCarry(){
+  if(verifying)return;verifying=true;
+  try{
+    const groups={};
+    carry.forEach(c=>{
+      if(c.st==='done')return;
+      if(!c.no){c.st='nocase';return}
+      if(!WAITING.includes(c.st))return;       // already settled
+      (groups[c.m.bench+'|'+c.m.hall]=groups[c.m.bench+'|'+c.m.hall]||[]).push(c);
+    });
+    for(const list of Object.values(groups)){
+      const cases=[...new Set(list.map(c=>c.no))], {bench,hall}=list[0].m;
+      let j;
+      try{j=await(await fetch(`/api/findcases?bench=${CODE[bench]}&hall=${hall}&cases=${encodeURIComponent(cases.join('|'))}`)).json()}
+      catch(e){j={ok:false}}
+      for(const c of list){
+        if(!j.ok){c.st='error';continue}
+        if(j.date&&j.published)carryDate=j.date;
+        if(!j.published){c.st='wait';continue}
+        const r=j.results[c.no];
+        if(!r){c.st='missing';
+          if(!c.asked){c.asked=true;c.keep.checked=false;c.row.classList.add('off')}
+          continue}
+        c.res=r;
+        c.st=(String(r.list)===String(c.m.list)&&r.item===Number(c.m.item)&&String(r.hall)===String(c.m.hall))?'same':'found';
+        if(c.st==='found'&&!c.asked){c.asked=true;c.apply.checked=true;applyPos(c)}
+      }
+    }
+  }finally{verifying=false;paintAll()}
 }
 function finishDay(kept,msg){
-  matters=kept;cfg.orders={};save();saveCfg();LS.set('hck_day',dayKey());
-  close($('dlgD'));render();if(msg)toast(msg,'OK',()=>{});
+  const dropped=carry.map(c=>c.m).filter(m=>!kept.includes(m));
+  if(carryMode==='day'){matters=kept;cfg.orders={};saveCfg();LS.set('hck_day',dayKey())}
+  else matters=matters.filter(m=>!dropped.includes(m));
+  save();close($('dlgD'));render();if(msg)toast(msg,'OK',()=>{});
 }
-$('dlgD').addEventListener('cancel',e=>e.preventDefault());
+$('dlgD').addEventListener('cancel',e=>{if(carryMode==='day')e.preventDefault()});
+$('dLater').onclick=()=>close($('dlgD'));
 $('dClear').onclick=()=>finishDay([],'Cases cleared.');
 $('dform').onsubmit=e=>{e.preventDefault();
-  const kept=[];
+  const kept=[];let unchecked=0;
   for(const c of carry){
     if(!c.keep.checked)continue;
     const list=Math.floor(+c.list.value), item=Math.floor(+c.item.value);
     if(!(list>=1)||!(item>=1)){alert('Enter a list and item number for each case you keep.');return}
-    if(!c.m.case&&c.m.found)c.m.case=c.m.found;
-    kept.push(Object.assign(c.m,{list:String(list),item,done:false}));
+    const r=c.res, confirmed=r&&(c.st==='same'||c.st==='found')&&String(r.list)===String(list)&&r.item===item&&String(r.hall)===String(c.hall);
+    const m=Object.assign(c.m,{list:String(list),item,hall:c.hall,done:false});
+    if(confirmed){m.vday=dayKey();m.found=c.no}else unchecked++;
+    kept.push(m);
   }
-  finishDay(kept,kept.length?`${kept.length} case${kept.length>1?'s':''} saved for today.`:'Cases cleared.');
+  finishDay(kept,kept.length?`${kept.length} case${kept.length>1?'s':''} saved${unchecked?`, ${unchecked} not yet checked against today's cause list`:' for today'}.`:'Cases cleared.');
 };
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkNewDay()});
-setInterval(checkNewDay,60000);
+setInterval(()=>{checkNewDay();if($('dlgD').open&&carry.some(c=>WAITING.includes(c.st)))verifyCarry()},60000);
 
+matters.forEach(m=>{if(m.vday===undefined)m.vday=''});  // cases saved before checking existed count as unchecked
 applyTheme();applyMob();render();checkNewDay();poll();setInterval(poll,10000);
 setInterval(()=>{if(snap)renderHeader(matters.map(m=>({m,r:evaluate(m,snap?.data)})))},1000);
 </script></main></body></html>

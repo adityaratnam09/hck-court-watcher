@@ -48,10 +48,17 @@ from your Python folder in Applications, then start the watcher again.
 3. Cases in the same hall and list share one ruler, so you can see how far the court is
    from each of them.
 4. Item numbers belong to one day's cause list, so on the first visit of a new day the
-   watcher shows yesterday's cases. Update the list or item for each case that has been
-   listed again, untick the ones you no longer need, then choose **Save for today**, or
-   choose **Clear all cases** to start clean. Settings are kept either way, and list
-   orders are cleared because they can change from day to day.
+   watcher shows yesterday's cases and checks each saved case number against today's
+   cause list for its court. If a case is found, you are asked whether to update it to its
+   new list and item. If it is not in that court's list, it is unticked so that it is
+   removed unless you keep it. A case with no saved case number cannot be checked, so
+   enter its list and item by hand. Then choose **Save for today**, or choose
+   **Clear all cases** to start clean. Settings are kept either way, and list orders are
+   cleared because they can change from day to day.
+5. A cause list counts as today's only when the date printed at the top of it is today's.
+   Until the court uploads it, the watcher says so, keeps checking every minute, and saves
+   your cases as not yet checked. Each of those cases shows "Not checked against today's
+   cause list" with a **Check all now** link, which checks every unchecked case at once.
 
 **Read the screen.**
 1. The headline names the case that needs attention first. The line under it counts the
@@ -96,7 +103,8 @@ checks the court's passed-over list for that hall. A case on that list is shown 
 over, with its place on the list. A case that is not on it is shown as called.
 
 **It fills in case numbers.** If you add a case without a case number, the watcher reads the
-hall's cause list and uses the number listed for that list and item.
+hall's cause list and uses the number listed for that list and item, once the list is dated
+today and the position has been checked.
 
 **It keeps what you need beside each case.** Each case can carry a name and a video
 conference link, with a Join hearing button on its row.
@@ -142,6 +150,11 @@ Some limits matter when reading any status:
   listed" with a note, because a distance to a missing item would be meaningless. Check the
   list and item numbers you entered. The watcher only checks for items past the end of a
   list, since a missing number inside a list can be a connected case.
+- **A case number that is not at its item is flagged.** If today's cause list shows a
+  different case at the list and item you saved, the case shows "Check item" and no
+  distance, because the item number has probably changed.
+- **A case is searched for only in its saved court.** Cases rarely move to another court, so
+  the watcher does not search the rest of the bench.
 - **The passed-over position is the court's list order.** It shows where the case stands on
   the hall's passed-over list, which covers every list in that hall.
 
